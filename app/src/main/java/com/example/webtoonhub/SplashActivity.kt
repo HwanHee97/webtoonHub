@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieAnimationView
 import com.example.webtoonhub.databinding.ActivitySplashBinding
 import com.example.webtoonhub.model.WebToonData
+import com.example.webtoonhub.utils.Constants
 
 lateinit var binding:ActivitySplashBinding
 lateinit var dataList:ArrayList<WebToonData>
@@ -16,6 +17,7 @@ lateinit var dataList:ArrayList<WebToonData>
 
 class SplashActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(Constants.TAG,"SplashActivity - onCreate() called")
         super.onCreate(savedInstanceState)
         setBinding()
         setContentView(binding.root)
@@ -24,7 +26,7 @@ class SplashActivity:AppCompatActivity() {
 
     }//onCreate()
 
-    //통신을 통해 데이터 가져오기
+    //통신을 통해 데이터 가져오기 (viewModel)
     fun getData(){
 
     }
@@ -42,12 +44,12 @@ class SplashActivity:AppCompatActivity() {
         binding.loadingImage.addAnimatorListener(object :Animator.AnimatorListener{
             override fun onAnimationStart(animation: Animator?) {
                 //TODO("Not yet implemented")
-                Log.d("로그","애니매이션 시작")
+                Log.d(Constants.TAG,"애니매이션 시작")
             }
 
             override fun onAnimationEnd(animation: Animator?) {
                 //TODO("Not yet implemented")
-                Log.d("로그","애니매이션 끝")
+                Log.d(Constants.TAG,"애니매이션 끝")
                 val intent = Intent(this@SplashActivity, MainActivity::class.java)
                 startActivity(intent)//메인 액티비티 시작 , !!나중에는 통신성공 데이터 함께 넘겨야함
                 finish()//스플래시 액티비티 종효
@@ -55,12 +57,12 @@ class SplashActivity:AppCompatActivity() {
 
             override fun onAnimationCancel(animation: Animator?) {
                 // TODO("Not yet implemented")
-                Log.d("로그","애니매이션 취소")
+                Log.d(Constants.TAG,"애니매이션 취소")
             }
 
             override fun onAnimationRepeat(animation: Animator?) {
                 //TODO("Not yet implemented")
-                Log.d("로그","애니매이션 반복")
+                Log.d(Constants.TAG,"애니매이션 반복")
             }
         })
     }
