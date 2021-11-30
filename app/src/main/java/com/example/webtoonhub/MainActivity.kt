@@ -9,11 +9,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.d(Constants.TAG,"MainActivity - onCreate() called")
+        Log.d(Constants.TAG, "MainActivity - onCreate() called")
 
     }
+
     //splashActivity로부터 인텐트 받기
-    fun getIntents(){
+    fun getIntents() {
 
     }
 
