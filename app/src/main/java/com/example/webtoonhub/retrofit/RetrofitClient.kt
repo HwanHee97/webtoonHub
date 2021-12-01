@@ -6,10 +6,12 @@ import com.example.webtoonhub.utils.isJsonArray
 import com.example.webtoonhub.utils.isJsonObject
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     //레트로핏 클라이언트 선언
@@ -29,7 +31,7 @@ object RetrofitClient {
                     }
                     message.isJsonArray()-> {
                         Log.d(Constants.TAG, "RetrofitClient -message.isJsonArray!!")
-                        //Log.d(Constants.TAG, JSONObject(message).toString(4))//indentSpace=4는 들여쓰기하기
+                        Log.d(Constants.TAG, JSONArray(message).toString(4))//indentSpace=4는 들여쓰기하기
                     }
                     else->{
                         try {
@@ -45,7 +47,12 @@ object RetrofitClient {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         //위에서 생성한 로깅 인터셉터를 okhttp 클라이언트에 추가한다.
         client.addInterceptor(loggingInterceptor)
-
+        //커넥션 타임아웃
+        client.connectTimeout(10, TimeUnit.SECONDS)
+        client.readTimeout(10, TimeUnit.SECONDS)
+        client.writeTimeout(10, TimeUnit.SECONDS)
+        //실패시 다시시도 여부
+        client.retryOnConnectionFailure(true)
         if (retrofitClient == null){
             //레트로핏 빌더를 통해 인스턴스 생성
             retrofitClient=Retrofit.Builder()

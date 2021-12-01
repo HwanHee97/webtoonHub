@@ -17,7 +17,7 @@ class RetrofitManager {
     //레트로핏 인터페이스 만들기(가져오기): BASE_URL을 매매변수로 getClient 함수 호출한 결과
     private val iRetrofit: IRetrofit? = RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
 
-    fun getWebtoonData(searchTerm: String?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
+    fun getWeekWebtoonData(searchTerm: String?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
 
         Log.d(Constants.TAG, "RetorfitManager - getWebtoonData()")
         val week = searchTerm.let { it } ?: ""//searchTerm이 비어있으면""을 반환 아니면 그대로(it) //enum쿨래스의 mon~sun 값이다.
