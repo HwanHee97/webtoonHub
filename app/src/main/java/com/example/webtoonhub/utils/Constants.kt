@@ -17,7 +17,11 @@ object API{
     //검색시 https://korea-webtoon-api.herokuapp.com/?search="검색어"
     //요일별 검색 https://korea-webtoon-api.herokuapp.com/all/week?day=fri
 }
+enum class PLATFORM{
+    NAVER,
+    KAKAO
 
+}
 enum class API_DAY_WEEK(val dayWeek:String, val dayNum:Int,val systemDayNum:Int){
     MONDAY("mon",0,2),
     TUESDAY("tue",1,3),

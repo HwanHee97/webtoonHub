@@ -15,7 +15,7 @@ import java.time.DayOfWeek
 import java.util.*
 import kotlin.collections.ArrayList
 
-lateinit var binding:ActivitySplashBinding
+private lateinit var binding:ActivitySplashBinding
 lateinit var dataList:ArrayList<WebToonData>
 var dayWeek: API_DAY_WEEK=API_DAY_WEEK.MONDAY//기본요일을 월요일로 설정
 
