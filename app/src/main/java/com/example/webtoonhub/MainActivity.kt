@@ -87,8 +87,10 @@ class MainActivity : AppCompatActivity() {
 //                    week[7] -> Log.d(Constants.TAG, "완결 선택 ")
 //
 //                }
-                var tab= week.filter { tab?.text ==it }[0]
-                Log.d(Constants.TAG, "$tab 선택 ")
+                var day= week.filter { tab?.text ==it }[0]
+                if (tab != null) {
+                    Log.d(Constants.TAG, "$day 선택, ${fragments[tab.position]} ")
+                }
             }
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
             override fun onTabReselected(tab: TabLayout.Tab?) {  }
