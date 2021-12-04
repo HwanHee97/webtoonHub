@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d(Constants.TAG, "MainActivity - onCreate() called")
 
-        setActionBar()//(네이버,카카오)플랫폼 선택하는 액션바 설정
-        setTabs()//요일 선택하는 탭 설정
-        setFragment()
+        setActionBar()// 액션바의 오버라이드 함수로 (네이버,카카오)플랫폼 선택하는 액션바 설정
+        setTabs()//요일 선택하는 탭바의 클릭(포커스) 이벤트
+        setFragment()//프래그먼트 생성하고 그수만큼 탭바 생성
 
 
 
@@ -46,11 +46,10 @@ class MainActivity : AppCompatActivity() {
 
 
     }//onCreate
-
+    //프래그먼트 생성하고 그수만큼 탭바 생성
     fun setFragment(){
 
         val pagerAdapter = WeekFragmentStateAdapter(fragmentActivity = this)
-
         for (a in week){
             var fragment=mainFragment()
             fragments.add(fragment)
@@ -58,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.viewPager.adapter=pagerAdapter
+        //탭바를 프래그먼트 수만클 생성
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text =week[position]
             Log.d(Constants.TAG,"포지션 : $position / tab : $tab")
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.topAppBar)
         supportActionBar?.setTitle("WebtoonHub")
     }
+    //탭바의 클릭(포커스) 이벤트
     fun setTabs(){
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             // 탭 버튼을 선택할 때 이벤트
@@ -129,7 +130,6 @@ class MainActivity : AppCompatActivity() {
                 platform=PLATFORM.KAKAO
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
