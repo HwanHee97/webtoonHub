@@ -25,10 +25,11 @@ class SplashActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setBinding()
         setContentView(binding.root)
+        getTDayWeek()
         setLodingImageListener()
         startLoadingImage()
         //오늘 요일 판별  dayWeek에 저장 타입은 enum클래스타입
-        getTDayWeek()
+
         //오늘 요일 웹툰 데이터 호출
 
         //데이터를 메인 액티비티에  넘김
@@ -72,6 +73,7 @@ class SplashActivity:AppCompatActivity() {
                 //TODO("Not yet implemented")
                 Log.d(Constants.TAG,"애니매이션 끝")
                 val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                intent.putExtra("daynum",dayWeek.dayNum)
                 startActivity(intent)//메인 액티비티 시작 , !!나중에는 통신성공 데이터 함께 넘겨야함
                 finish()//스플래시 액티비티 종효
             }

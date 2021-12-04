@@ -11,15 +11,16 @@ enum class RESPONSE_STATUS{
 object API{
     const val BASE_URL:String="https://korea-webtoon-api.herokuapp.com/"
     const val GET_ALL:String="all"
-    const val SEARCH:String=""
-    const val SEARCH_WEEK:String="all/week"
+    const val SEARCH:String="{platform}/week"
+    const val SEARCH_ALL_WEEK:String="all/week"
+
     //모두 검색 https://korea-webtoon-api.herokuapp.com/all
     //검색시 https://korea-webtoon-api.herokuapp.com/?search="검색어"
     //요일별 검색 https://korea-webtoon-api.herokuapp.com/all/week?day=fri
 }
 enum class PLATFORM{
-    NAVER,
-    KAKAO
+    naver,
+    kakao
 
 }
 enum class API_DAY_WEEK(val dayWeek:String, val dayNum:Int,val systemDayNum:Int){
@@ -37,8 +38,8 @@ enum class API_DAY_WEEK(val dayWeek:String, val dayNum:Int,val systemDayNum:Int)
             WEDNESDAY.systemDayNum -> WEDNESDAY
             THURSDAY.systemDayNum -> THURSDAY
             FRIDAY.systemDayNum -> FRIDAY
-            systemDayNum -> SATURDAY
-            systemDayNum -> SUNDAY
+            SATURDAY.systemDayNum -> SATURDAY
+            SUNDAY.systemDayNum -> SUNDAY
             else -> MONDAY
         }
     }
