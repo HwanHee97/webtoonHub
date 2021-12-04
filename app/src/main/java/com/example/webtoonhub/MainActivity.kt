@@ -8,16 +8,28 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.webtoonhub.databinding.ActivityMainBinding
+import com.example.webtoonhub.fragment.WeekFragmentStateAdapter
 import com.example.webtoonhub.retrofit.RetrofitManager
 import com.example.webtoonhub.utils.Constants
 import com.example.webtoonhub.utils.PLATFORM
 import com.example.webtoonhub.utils.RESPONSE_STATUS
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import androidx.annotation.NonNull
+import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.example.webtoonhub.fragment.mainFragment
+import java.util.*
+
 
 private lateinit var binding: ActivityMainBinding
 lateinit var platform:PLATFORM
 
 class MainActivity : AppCompatActivity() {
+    var fragments : ArrayList<Fragment> = ArrayList()
+    var week : ArrayList<String> = arrayListOf("월","화","수","목","금","토","일","완결")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()//바인딩
@@ -26,11 +38,32 @@ class MainActivity : AppCompatActivity() {
 
         setActionBar()//(네이버,카카오)플랫폼 선택하는 액션바 설정
         setTabs()//요일 선택하는 탭 설정
+        setFragment()
 
 
 
-    }//oncreated
 
+
+
+    }//onCreate
+
+    fun setFragment(){
+
+        val pagerAdapter = WeekFragmentStateAdapter(fragmentActivity = this)
+
+        for (a in week){
+            var fragment=mainFragment()
+            fragments.add(fragment)
+            pagerAdapter.addFragment(fragment)
+        }
+
+        binding.viewPager.adapter=pagerAdapter
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            tab.text =week[position]
+            Log.d(Constants.TAG,"포지션 : $position / tab : $tab")
+        }.attach()
+
+    }
     fun setBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
     }
@@ -43,16 +76,19 @@ class MainActivity : AppCompatActivity() {
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             // 탭 버튼을 선택할 때 이벤트
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when(tab?.text) {
-                    "월" ->Log.d(Constants.TAG, "월 선택 ")
-                    "화" -> Log.d(Constants.TAG, "화 선택 ")
-                    "수" -> Log.d(Constants.TAG, "수 선택 ")
-                    "목" -> Log.d(Constants.TAG, "목 선택 ")
-                    "금" -> Log.d(Constants.TAG, "금 선택 ")
-                    "토" -> Log.d(Constants.TAG, "토 선택 ")
-                    "일" -> Log.d(Constants.TAG, "일 선택 ")
-                    "완결" -> Log.d(Constants.TAG, "완결 선택 ")
-                }
+//                when(tab?.text) {
+//                    week[0] ->Log.d(Constants.TAG, "월 선택 ")
+//                    week[1] -> Log.d(Constants.TAG, "화 선택 ")
+//                    week[2] -> Log.d(Constants.TAG, "수 선택 ")
+//                    week[3] -> Log.d(Constants.TAG, "목 선택 ")
+//                    week[4] -> Log.d(Constants.TAG, "금 선택 ")
+//                    week[5] -> Log.d(Constants.TAG, "토 선택 ")
+//                    week[6] -> Log.d(Constants.TAG, "일 선택 ")
+//                    week[7] -> Log.d(Constants.TAG, "완결 선택 ")
+//
+//                }
+                var tab= week.filter { tab?.text ==it }[0]
+                Log.d(Constants.TAG, "$tab 선택 ")
             }
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
             override fun onTabReselected(tab: TabLayout.Tab?) {  }

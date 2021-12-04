@@ -41,29 +41,7 @@ class SplashActivity:AppCompatActivity() {
         val instance = Calendar.getInstance()
         val week=instance.get(Calendar.DAY_OF_WEEK)
         Log.d(Constants.TAG,"SplashActivity - getTDayWeek() called/week = $week")
-//        when(week){//코드 간단하게 하는법 생각해보기
-//            API_DAY_WEEK.MONDAY.systemDayNum->{
-//                dayWeek=API_DAY_WEEK.MONDAY
-//            }
-//            API_DAY_WEEK.TUESDAY.systemDayNum->{
-//                dayWeek=API_DAY_WEEK.TUESDAY
-//            }
-//            API_DAY_WEEK.WEDNESDAY.systemDayNum->{
-//                dayWeek=API_DAY_WEEK.WEDNESDAY
-//            }
-//            API_DAY_WEEK.THURSDAY.systemDayNum->{
-//                dayWeek=API_DAY_WEEK.THURSDAY
-//            }
-//            API_DAY_WEEK.FRIDAY.systemDayNum->{
-//                dayWeek=API_DAY_WEEK.FRIDAY
-//            }
-//            API_DAY_WEEK.SATURDAY.systemDayNum->{
-//                dayWeek=API_DAY_WEEK.SATURDAY
-//            }
-//            API_DAY_WEEK.SUNDAY.systemDayNum->{
-//                dayWeek=API_DAY_WEEK.SUNDAY
-//            }
-//        }
+
         dayWeek= dayWeek.setDay(week)
         Log.d(Constants.TAG,"SplashActivity - getTDayWeek() called/dayWeek = ${dayWeek.dayWeek}//${dayWeek.dayNum}//${dayWeek.systemDayNum}")
     }
