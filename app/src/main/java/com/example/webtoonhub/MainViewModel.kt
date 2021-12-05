@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.webtoonhub.model.WebToonData
 import com.example.webtoonhub.retrofit.RetrofitManager
 import com.example.webtoonhub.utils.Constants
 import com.example.webtoonhub.utils.RESPONSE_STATUS
+import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
     //요일별 웹툰 데이터 리스트
@@ -18,13 +20,14 @@ class MainViewModel: ViewModel() {
 
     // 요일을 매개변수로 받아 api 호출
     fun getWebtoonData(platform: String,week:String){
+        viewModelScope.launch {
             var queryWeek=changeWeekQuery(week)
-            RetrofitManager.instance.getWeekWebtoonData(searchPlatform=platform, searchTerm = queryWeek, completion = { //completion을 사용한 이유는 비동기 처리를 위함
+            RetrofitManager.instance.getWeekWebtoonData(searchPlatform=platform, searchTerm = queryWeek, completion = {
                 responseState, responseDataArrayList ->
             when (responseState) {
                 RESPONSE_STATUS.OKAY -> {
                     Log.d(Constants.TAG, "MainActivity - api 호출 성공: ${responseDataArrayList?.size}")
-
+                    _webtoonDataList.value=responseDataArrayList
                 }
                 RESPONSE_STATUS.FAIL -> {
 
@@ -36,6 +39,7 @@ class MainViewModel: ViewModel() {
                 }
             }
         })
+    }
     }
     fun changeWeekQuery(week: String) :String{
         return when(week) {

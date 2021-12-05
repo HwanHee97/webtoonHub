@@ -25,17 +25,16 @@ class SplashActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setBinding()
         setContentView(binding.root)
+        //오늘 요일 판별  dayWeek에 저장 타입은 enum클래스타입
         getTDayWeek()
         setLodingImageListener()
         startLoadingImage()
-        //오늘 요일 판별  dayWeek에 저장 타입은 enum클래스타입
-
-        //오늘 요일 웹툰 데이터 호출
-
-        //데이터를 메인 액티비티에  넘김
-
 
     }//onCreate()
+
+    fun setBinding(){
+        binding= ActivitySplashBinding.inflate(layoutInflater)
+    }
 
     fun getTDayWeek(){
         //시스템요일(일~토 1~7) 과 api요일을 판단하는 숫자가달라서 enum쿨래스로 선언하여 when을 통해 판별하여 api요일 숫자로 저장
@@ -45,22 +44,6 @@ class SplashActivity:AppCompatActivity() {
 
         dayWeek= dayWeek.setDay(week)
         Log.d(Constants.TAG,"SplashActivity - getTDayWeek() called/dayWeek = ${dayWeek.dayWeek}//${dayWeek.dayNum}//${dayWeek.systemDayNum}")
-    }
-
-
-    //통신을 통해 데이터 가져오기 (viewModel)
-    fun getData(){
-
-    }
-
-    fun setBinding(){
-        binding= ActivitySplashBinding.inflate(layoutInflater)
-    }
-    fun startLoadingImage(){
-        binding.loadingImage.apply {
-            playAnimation()
-            repeatCount=3//반복횟수   이것을 지정 안하면 무한반복이다. 나중에 애니매이션 무한반복 시키고 통신이 성공했을때 애니매이션 끝내고 액티비티 변환할것
-        }
     }
     fun setLodingImageListener(){
         binding.loadingImage.addAnimatorListener(object :Animator.AnimatorListener{
@@ -88,6 +71,12 @@ class SplashActivity:AppCompatActivity() {
                 Log.d(Constants.TAG,"애니매이션 반복")
             }
         })
+    }
+    fun startLoadingImage(){
+        binding.loadingImage.apply {
+            playAnimation()
+            repeatCount=3//반복횟수   이것을 지정 안하면 무한반복이다. 나중에 애니매이션 무한반복 시키고 통신이 성공했을때 애니매이션 끝내고 액티비티 변환할것
+        }
     }
 
 }

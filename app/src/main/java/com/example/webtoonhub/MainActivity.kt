@@ -1,6 +1,5 @@
 package com.example.webtoonhub
 
-import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.webtoonhub.fragment.mainFragment
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 private lateinit var binding: ActivityMainBinding
@@ -26,31 +26,57 @@ private lateinit var mainViewModel: MainViewModel
 private lateinit var menuItem:MenuItem
 class MainActivity : AppCompatActivity() {
     var fragments : ArrayList<Fragment> = ArrayList()
-    var tabs : ArrayList<TabLayout.Tab> = ArrayList()
-    var week : ArrayList<String> = arrayListOf("월","화","수","목","금","토","일","완결")//텝 생성을 위한 배열
-    var daynum:Int=0//인텐트로 받아올 요일 데이터
+   // var tabs : ArrayList<TabLayout.Tab> = ArrayList()
+    var dayweeks : ArrayList<String> = arrayListOf("월","화","수","목","금","토","일","완결")//텝 생성을 위한 배열
+    var startToDayWeeks:ArrayList<String> = ArrayList()
+    var dayWeeknum:Int=0//인텐트로 받아올 요일 데이터
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getIntents()//오늘 요일받아오기
+        makeWeekList(dayWeeknum)
         setBinding()//바인딩
         setContentView(binding.root)
-
         Log.d(Constants.TAG, "MainActivity - onCreate() called")
 
         setActionBar()// 액션바의 오버라이드 함수로 (네이버,카카오)플랫폼 선택하는 액션바 설정
-        setTabsListener()//요일 선택하는 탭바의 클릭(포커스) 이벤트리스너//통신
-        setFragmentTabs()//프래그먼트 생성하고 그수만큼 탭바 생성
-
-
-
-
+        setTabsListener()//요일 선택하는 탭바의 클릭 이벤트리스너//통신
+        setTabsFragment()//프래그먼트 생성하고 그수만큼 탭바 생성
+        setObserve()
+        Log.d(Constants.TAG,"mainFragment - onCreateView() called - mainViewModel.webtoonDataList.value?.get(0)?.week= ${mainViewModel.webtoonDataList.value?.get(0)?.title}")
 
     }//onCreate
 
+    fun setObserve(){//
+        Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
+        mainViewModel.webtoonDataList.observe(this, androidx.lifecycle.Observer {
+            Log.d(Constants.TAG,"!!MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 날짜= ${it[0].title}")
+
+        })
+
+    }
+
+
+    //월~완결 순서를  오늘요일부터 시작하게 리스트 만들기.//tab을 오늘요일로 포커스 할 필요없다.
+    fun makeWeekList( daynum:Int){
+        var i=daynum
+        do {
+            startToDayWeeks.add(dayweeks[i])
+            i++
+            //Log.d(Constants.TAG,"i = $i / added ${dayweeks[i-1]}")
+            if (i==8){
+                Log.d(Constants.TAG,"i가 7이다 = $i")
+                i=0
+            }
+        }while (startToDayWeeks.size<8)
+        //Log.d(Constants.TAG,"tempDayWeeks $startToDayWeeks tempDayWeeks.size=${startToDayWeeks.size}")
+    }
     //splashActivity로부터 인텐트 받기
     fun getIntents() {
-        daynum=intent.getIntExtra("daynum",0)
+        dayWeeknum=intent.getIntExtra("daynum",0)
     }
     //바인딩
     fun setBinding() {
@@ -62,12 +88,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.topAppBar)
         supportActionBar?.setTitle("WebtoonHub")
     }
-    //요일 선택하는 탭바의 클릭(포커스) 이벤트리스너//오늘 요일을 포서스까지 함//통신
+    //요일 선택하는 탭바의 클릭(포커스) 이벤트리스너//통신
     fun setTabsListener(){
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             // 탭 버튼을 선택할 때 이벤트
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                var day= week.filter { tab?.text ==it }[0]
+                var day= dayweeks.filter { tab?.text ==it }[0]
                 if (tab != null) {
                     Log.d(Constants.TAG, "$day 선택, ${fragments[tab.position]} ")
                 }
@@ -81,11 +107,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
     //프래그먼트 생성하고 그수만큼 탭바 생성
-    fun setFragmentTabs(){
+    fun setTabsFragment(){
 
         val pagerAdapter = WeekFragmentStateAdapter(fragmentActivity = this)
-        for (a in week){
-            var fragment=mainFragment()
+        for (a in startToDayWeeks){
+            var fragment=mainFragment(a)
             fragments.add(fragment)
             pagerAdapter.addFragment(fragment)
         }
@@ -93,19 +119,18 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager.adapter=pagerAdapter
         //탭바를 프래그먼트 수만클 생성
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
-            tab.text =week[position]
-            tabs.add(tab)
-            Log.d(Constants.TAG,"포지션 : $position / tab : $tab")
+            tab.text =startToDayWeeks[position]
+            //tabs.add(tab)
+            //Log.d(Constants.TAG,"포지션 : $position / tab : $tab")
         }.attach()
-        tabs[daynum].select()//오늘요일로 tab 포커스
+        //tabs[dayWeeknum].select()//오늘요일로 tab 포커스
+
     }
-
-
 
 //액션바 사용을 위한 오버라이드 함수
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
-        inflater.inflate(R.menu.day_menu, menu)
+        inflater.inflate(R.menu.platform_menu, menu)
         if (menu != null) {
             menuItem=menu.findItem(R.id.menu_naver)
         }

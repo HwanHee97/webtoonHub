@@ -28,7 +28,39 @@ class RetrofitManager {
         call.enqueue(object : retrofit2.Callback<JsonElement> {
             //응답성공시
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                Log.d(Constants.TAG, "RetorfitManager-onResponse() called / response: ${response.body()}")
+                //Log.d(Constants.TAG, "RetorfitManager-onResponse() called / response: ${response.body()}")
+                when(response.code()){//응답 코드기 200(정상)일떄만 completion을(메인 뷰모델로) 보낸다.
+                    200->{
+                        response.body()?.let {
+                        //response.body()에 데이터가 있다면
+                            var parsedWeebtoonDataArrayList=ArrayList<WebToonData>()
+                            //데이터 파싱
+                            val body=it.asJsonArray
+                            body.forEach{ resultItem->
+                                val resultItemObject = resultItem.asJsonObject//하나의 웹툰 정보모음
+
+                                val title: String = resultItemObject.get("title").asString
+                                val author: String = resultItemObject.get("author").asString
+                                val url: String = resultItemObject.get("url").asString
+                                val thumbnail: String = resultItemObject.get("img").asString
+                                val platform: String = resultItemObject.get("service").asString
+                                val week:Int = resultItemObject.get("week").asInt
+
+                                val webtoonItem = WebToonData(
+                                    title = title,
+                                    author = author,
+                                    url = url,
+                                    thumbnail = thumbnail,
+                                    platform = platform,
+                                    week = week
+                                )
+                                parsedWeebtoonDataArrayList.add(webtoonItem)
+
+                            }
+                            completion(RESPONSE_STATUS.OKAY,parsedWeebtoonDataArrayList)
+                        }
+                    }
+                }
             }
             //응답 실패시
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {

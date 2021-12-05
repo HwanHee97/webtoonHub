@@ -17,7 +17,7 @@
         android:id="@+id/fragment_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="프래그먼트립니다,!!!!!!!!!!!"/>
+        android:text="프래그먼트립니다!!!!!!!!!!!"/>
 
 </LinearLayout>
 </FrameLayout>
