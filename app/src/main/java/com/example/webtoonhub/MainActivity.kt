@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.webtoonhub.fragment.mainFragment
+import com.example.webtoonhub.model.WebToonData
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -24,8 +25,9 @@ private lateinit var binding: ActivityMainBinding
 private  var platform:PLATFORM=PLATFORM.naver//네이버가 기본설정
 private lateinit var mainViewModel: MainViewModel
 private lateinit var menuItem:MenuItem
+
 class MainActivity : AppCompatActivity() {
-    var fragments : ArrayList<Fragment> = ArrayList()
+    var fragments : ArrayList<mainFragment> = ArrayList()
    // var tabs : ArrayList<TabLayout.Tab> = ArrayList()
     var dayweeks : ArrayList<String> = arrayListOf("월","화","수","목","금","토","일","완결")//텝 생성을 위한 배열
     var startToDayWeeks:ArrayList<String> = ArrayList()
@@ -46,16 +48,17 @@ class MainActivity : AppCompatActivity() {
         setTabsListener()//요일 선택하는 탭바의 클릭 이벤트리스너//통신
         setTabsFragment()//프래그먼트 생성하고 그수만큼 탭바 생성
         setObserve()
-        Log.d(Constants.TAG,"mainFragment - onCreateView() called - mainViewModel.webtoonDataList.value?.get(0)?.week= ${mainViewModel.webtoonDataList.value?.get(0)?.title}")
+        Log.d(Constants.TAG,"MainActivity - mainViewModel.webtoonDataList.value?.get(0)?.week= ${mainViewModel.webtoonDataList.value?.get(0)?.title}")
 
     }//onCreate
 
     fun setObserve(){//
         Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
         mainViewModel.webtoonDataList.observe(this, androidx.lifecycle.Observer {
-            Log.d(Constants.TAG,"!!MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 날짜= ${it[0].title}")
+            Log.d(Constants.TAG,"!!MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[0].title}")
 
         })
+
 
     }
 
@@ -93,11 +96,11 @@ class MainActivity : AppCompatActivity() {
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             // 탭 버튼을 선택할 때 이벤트
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                var day= dayweeks.filter { tab?.text ==it }[0]
+                var day= startToDayWeeks.filter { tab?.text ==it }[0]
                 if (tab != null) {
-                    Log.d(Constants.TAG, "$day 선택, ${fragments[tab.position]} ")
+                    Log.d(Constants.TAG, "$day 선택, ${fragments[tab.position]}/ 포지션 = ${tab.position} ")
+                    mainViewModel.getWebtoonData(platform = platform.toString(),day, fragments[tab.position])//선택된 요일의 웹툰 데이터 검색하기
                 }
-                mainViewModel.getWebtoonData(platform = platform.toString(),day)//선택된 요일의 웹툰 데이터 검색하기
             }
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
             override fun onTabReselected(tab: TabLayout.Tab?) {  }
@@ -113,6 +116,7 @@ class MainActivity : AppCompatActivity() {
         for (a in startToDayWeeks){
             var fragment=mainFragment(a)
             fragments.add(fragment)
+            Log.d(Constants.TAG,"프래그먼트 추가됨 $a  프래그먼트 주소${fragment}")
             pagerAdapter.addFragment(fragment)
         }
 
@@ -121,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text =startToDayWeeks[position]
             //tabs.add(tab)
-            //Log.d(Constants.TAG,"포지션 : $position / tab : $tab")
+            Log.d(Constants.TAG,"포지션 : $position / tab : $tab  프래그먼트요일 = ${startToDayWeeks[position]}프래그먼트 주소 = ${fragments[position]}")
         }.attach()
         //tabs[dayWeeknum].select()//오늘요일로 tab 포커스
 

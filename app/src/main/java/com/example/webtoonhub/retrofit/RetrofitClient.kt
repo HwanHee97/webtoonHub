@@ -31,7 +31,7 @@ object RetrofitClient {
                     }
                     message.isJsonArray()-> {
                         Log.d(Constants.TAG, "RetrofitClient -message.isJsonArray!!")
-                        Log.d(Constants.TAG, JSONArray(message).toString(4))//indentSpace=4는 들여쓰기하기
+                        //Log.d(Constants.TAG, JSONArray(message).toString(4))//indentSpace=4는 들여쓰기하기
                     }
                     else->{
                         try {
