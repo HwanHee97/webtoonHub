@@ -40,7 +40,7 @@ class SplashActivity:AppCompatActivity() {
         //시스템요일(일~토 1~7) 과 api요일을 판단하는 숫자가달라서 enum쿨래스로 선언하여 when을 통해 판별하여 api요일 숫자로 저장
         val instance = Calendar.getInstance()
         val week=instance.get(Calendar.DAY_OF_WEEK)
-        Log.d(Constants.TAG,"SplashActivity - getTDayWeek() called/week = $week")
+        //Log.d(Constants.TAG,"SplashActivity - getTDayWeek() called/week = $week")
 
         dayWeek= dayWeek.setDay(week)
         Log.d(Constants.TAG,"SplashActivity - getTDayWeek() called/dayWeek = ${dayWeek.dayWeek}//${dayWeek.dayNum}//${dayWeek.systemDayNum}")

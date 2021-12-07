@@ -20,7 +20,7 @@ class MainViewModel: ViewModel() {
     private var _fragmentPosision=MutableLiveData<Int>()
 
     // 요일을 매개변수로 받아 api 호출
-    fun getWebtoonData(platform: String,week:String,fragment:mainFragment){
+    fun getWebtoonData(platform: String,week:String){
         viewModelScope.launch {
             var queryWeek=changeWeekQuery(week)
             RetrofitManager.instance.getWeekWebtoonData(searchPlatform=platform, searchTerm = queryWeek, completion = {
@@ -29,8 +29,8 @@ class MainViewModel: ViewModel() {
                 RESPONSE_STATUS.OKAY -> {
                     Log.d(Constants.TAG, "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}")
                     _webtoonDataList.value=responseDataArrayList
-                    Log.d(Constants.TAG,"MainViewModel- 메인 프래그먼트의 getData함수 호출함 ")
-                    fragment.getData(responseDataArrayList)
+
+
                 }
                 RESPONSE_STATUS.FAIL -> {
 
