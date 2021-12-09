@@ -53,7 +53,7 @@ class MainViewModel: ViewModel() {
             "금" ->"fri"
             "토" ->"sat"
             "일" -> "sun"
-            else -> ""
+            else -> "sun"
         }
     }
 

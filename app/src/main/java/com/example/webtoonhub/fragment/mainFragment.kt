@@ -6,15 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.webtoonhub.MainViewModel
+import com.example.webtoonhub.R
 import com.example.webtoonhub.databinding.FragmentMainBinding
 import com.example.webtoonhub.model.WebToonData
+import com.example.webtoonhub.recyclerview.WebtoonRecyclerViewAdapter
 import com.example.webtoonhub.utils.Constants
-import okhttp3.internal.notify
 
 private lateinit var binding: FragmentMainBinding
 private lateinit var mainViewModel: MainViewModel
@@ -23,8 +23,9 @@ class mainFragment() : Fragment() {
     // TODO: Rename and change types of parameters
 
 
-    private lateinit var webtoonDataList:ArrayList<WebToonData>
-
+    private var webtoonDataList=ArrayList<WebToonData>()
+    private  val webtoonRecyclerViewAdapter : WebtoonRecyclerViewAdapter by lazy {
+        WebtoonRecyclerViewAdapter(webtoonDataList,this.requireContext()) }//선언과 동시에 초기화
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(Constants.TAG,"mainFragment - onCreate() called")
@@ -37,38 +38,45 @@ class mainFragment() : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         Log.d(Constants.TAG,"mainFragment - onCreateView() called")
-
+        binding=DataBindingUtil.inflate(inflater,R.layout.fragment_main,container,false)
         setBinding()
-        //setObserve()
+        setRecyclerView()
+       // setObserve()
         return binding.root
     }
+
     fun setBinding(){
         Log.d(Constants.TAG,"mainFragment - setBinding() called")
-       // binding= FragmentMainBinding.inflate(layoutInflater)
-        binding= FragmentMainBinding.inflate(LayoutInflater.from(this.context))
-        mainViewModel=ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        //binding.fragmentTv.text="$dayWeek 요일 프래그먼트 입니다~~"
+        //binding= FragmentMainBinding.inflate(layoutInflater)
+        //mainViewModel=ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
     }
-    fun setData(responseDataArrayList: ArrayList<WebToonData>?) {
-        Log.d(Constants.TAG,"mainFragment - setData() called ${responseDataArrayList?.get(0)?.title} // $this")
 
+    fun setRecyclerView(){
+        binding.myWebtoonRecyclerView.apply {
+            layoutManager= GridLayoutManager(this.context,2, GridLayoutManager.VERTICAL,false)
+            adapter= webtoonRecyclerViewAdapter
+        }
+    }
+
+
+    fun setData(responseDataArrayList: ArrayList<WebToonData>?) {
+        Log.d(Constants.TAG,"mainFragment - setData() called ${responseDataArrayList?.get(1)?.title} // $this")
+        if (responseDataArrayList == null) {
+            Log.e(Constants.TAG,"Null!!!!!!")
+        }
         if (responseDataArrayList != null) {
             webtoonDataList=responseDataArrayList
+            binding.item="${webtoonDataList[1].title} -> 첫번째 아이템 제목~~"
         }
-        //binding.fragmentTv.text="${webtoonDataList[0].title} -> 첫번째 아이템 제목~~"
-        binding.item="${webtoonDataList[0].title} -> 첫번째 아이템 제목~~"
+        //webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
+        webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
 
     }
-//    fun setObserve(){//
-//        Log.d(Constants.TAG,"!!mainFragment - setObserve() called")
-//       mainViewModel.webtoonDataList.observe(requireActivity(), androidx.lifecycle.Observer {
-//            Log.d(Constants.TAG,"!!mainFragment - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[0].title}")
-//           //binding.fragmentTv.text="${it[0].title} -> 첫번째 아이템 제목~~"
-//       })
-//
-//
-//    }
 
-
+    override fun onResume() {
+        super.onResume()
+        webtoonDataList
+        webtoonRecyclerViewAdapter
+    }
 
 }

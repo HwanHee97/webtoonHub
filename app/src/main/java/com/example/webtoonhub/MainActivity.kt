@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     var startToDayWeeks:ArrayList<String> = ArrayList()
     var dayWeeknum:Int=0//인텐트로 받아올 요일 데이터
     val pagerAdapter by lazy { WeekFragmentStateAdapter(supportFragmentManager,lifecycle,dayweeks) }
-     var selectTab:Int = 0
+    var selectTab:Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,11 +56,9 @@ class MainActivity : AppCompatActivity() {
     fun setObserve(){//
         //Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
         mainViewModel.webtoonDataList.observe(this, androidx.lifecycle.Observer {
-            Log.d(Constants.TAG,"MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[0].title} //${pagerAdapter.getFragment(selectTab)}")
+            Log.d(Constants.TAG,"MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[1].title} //${pagerAdapter.getFragment(selectTab)}")
             pagerAdapter.getFragment(selectTab).setData(it)
         })
-
-
     }
 
 
@@ -102,9 +100,8 @@ class MainActivity : AppCompatActivity() {
                 //선택된 요일 데이터 호출
                 if (tab != null) {
                     selectTab=tab.position
-                    Log.d(Constants.TAG, "$day 선택, / 포지션 = ${tab.position} ")
+                    Log.d(Constants.TAG, "----------$day 선택, / tab 포지션 = ${tab.position} -----------")
                     mainViewModel.getWebtoonData(platform = platform.toString(),day)//선택된 요일의 웹툰 데이터 검색하기
-                    //binding.viewPager.setCurrentItem(tab.position)
                 }
             }
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
@@ -117,25 +114,20 @@ class MainActivity : AppCompatActivity() {
     //프래그먼트 생성하고 그수만큼 탭바 생성
     fun setTabsFragment(){
 
-
 //        for (a in startToDayWeeks){
 //            var fragment=mainFragment(a)
 //            fragments.add(fragment)
 //            Log.d(Constants.TAG,"프래그먼트 추가됨 $a  프래그먼트 주소${fragment}")
 //            pagerAdapter.addFragment(fragment)
 //        }
-
         binding.viewPager.adapter=pagerAdapter
-
+        binding.viewPager.offscreenPageLimit=5
         //binding.viewPager.isUserInputEnabled=false  // 스와이프 막기
         //탭바를 프래그먼트 수만클 생성
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text =startToDayWeeks[position]
             //tabs.add(tab)
-            //Log.d(Constants.TAG,"포지션 : $position / tab : $tab  프래그먼트요일 = ${startToDayWeeks[position]}프래그먼트 주소 = ${fragments[position]}")
         }.attach()
-        //tabs[dayWeeknum].select()//오늘요일로 tab 포커스
-
     }
 //액션바 사용을 위한 오버라이드 함수
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

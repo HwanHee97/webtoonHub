@@ -18,20 +18,17 @@ class WeekFragmentStateAdapter(fragmentManager: FragmentManager,lifecycle: Lifec
     }
 
     override fun createFragment(position: Int): Fragment {
-        Log.d(Constants.TAG,"WeekFragmentStateAdapter - createFragment() called")
+        Log.d(Constants.TAG,"WeekFragmentStateAdapter - createFragment() called / position = $position")
         val fragment=mainFragment()
         fragments.add(fragment)
+        Log.d(Constants.TAG,"WeekFragmentStateAdapter - createFragment() called / fragments.size = ${fragments.size}")
         return fragment
     }
 
-//    fun addFragment(fragment: Fragment) {
-//        Log.d(Constants.TAG,"WeekFragmentStateAdapter - addFragment() called")
-//        fragments.add(fragment)
-//        notifyItemInserted(fragments.size-1)
-//    }
     fun getFragment(position: Int):mainFragment{
         return fragments[position]
     }
+
     fun removeFragment() {
         fragments.removeLast()
         notifyItemRemoved(fragments.size)

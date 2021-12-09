@@ -48,7 +48,7 @@ object RetrofitClient {
         //위에서 생성한 로깅 인터셉터를 okhttp 클라이언트에 추가한다.
         client.addInterceptor(loggingInterceptor)
         //커넥션 타임아웃
-        client.connectTimeout(10, TimeUnit.SECONDS)
+        client.connectTimeout(20, TimeUnit.SECONDS)
         client.readTimeout(10, TimeUnit.SECONDS)
         client.writeTimeout(10, TimeUnit.SECONDS)
         //실패시 다시시도 여부
