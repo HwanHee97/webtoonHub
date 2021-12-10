@@ -11,23 +11,20 @@ import com.example.webtoonhub.utils.Constants
 
 class WebViewActivity: AppCompatActivity() {
     private lateinit var binding: ActivityWebViewBinding
-
-
     private lateinit var url:String
     private lateinit var actionBar: ActionBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(Constants.TAG,"DownloadWedViewActivity - onCreate() called ")
-
         setBinding()
-
         setContentView(binding.root)
-
         setActionBar()
         getIntents()
         setWebView()
 
-    }
+    }//onCreate()
+
     fun setBinding(){
         Log.d(Constants.TAG,"DownloadWedViewActivity - setBinding() called ")
         binding = ActivityWebViewBinding.inflate(layoutInflater)

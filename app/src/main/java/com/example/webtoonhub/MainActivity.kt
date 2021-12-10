@@ -22,25 +22,23 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-private lateinit var binding: ActivityMainBinding
-private  var platform:PLATFORM=PLATFORM.naver//네이버가 기본설정
-private lateinit var mainViewModel: MainViewModel
-private lateinit var menuItem:MenuItem
+
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var menuItem:MenuItem
+    private lateinit var pagerAdapter:WeekFragmentStateAdapter
+    private  var platform:PLATFORM=PLATFORM.naver//네이버가 기본설정
     var fragments : ArrayList<mainFragment> = ArrayList()
-   // var tabs : ArrayList<TabLayout.Tab> = ArrayList()
-    var dayweeks : ArrayList<String> = arrayListOf("월","화","수","목","금","토","일","완결")//텝 생성을 위한 배열
-    var startToDayWeeks:ArrayList<String> = ArrayList()
-    var dayWeeknum:Int=0//인텐트로 받아올 요일 데이터
-    val pagerAdapter by lazy { WeekFragmentStateAdapter(supportFragmentManager,lifecycle,dayweeks) }
+    var startToDayWeeks:ArrayList<String> = ArrayList()//인텐트로 받아올 오늘요일부터 시작하는 요일 리스트
+    //val pagerAdapter by lazy { WeekFragmentStateAdapter(supportFragmentManager,lifecycle,dayweeks) }
     var selectTab:Int = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getIntents()//오늘 요일받아오기
-        makeWeekList(dayWeeknum)
+
         setBinding()//바인딩
         setContentView(binding.root)
         Log.d(Constants.TAG, "MainActivity - onCreate() called")
@@ -49,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         setTabsListener()//요일 선택하는 탭바의 클릭 이벤트리스너//통신
         setTabsFragment()//프래그먼트 생성하고 그수만큼 탭바 생성
         setObserve()
-
 
     }//onCreate
 
@@ -61,24 +58,10 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
-    //월~완결 순서를  오늘요일부터 시작하게 리스트 만들기.//tab을 오늘요일로 포커스 할 필요없다.
-    fun makeWeekList( daynum:Int){
-        var i=daynum
-        do {
-            startToDayWeeks.add(dayweeks[i])
-            i++
-            //Log.d(Constants.TAG,"i = $i / added ${dayweeks[i-1]}")
-            if (i==8){
-                //Log.d(Constants.TAG,"i가 8이다 = $i")
-                i=0
-            }
-        }while (startToDayWeeks.size<8)
-        //Log.d(Constants.TAG,"tempDayWeeks $startToDayWeeks tempDayWeeks.size=${startToDayWeeks.size}")
-    }
     //splashActivity로부터 인텐트 받기
     fun getIntents() {
-        dayWeeknum=intent.getIntExtra("daynum",0)
+        startToDayWeeks= intent.getStringArrayListExtra("startToDayWeeks") as ArrayList<String>
+        Log.d(Constants.TAG,"MainActivity - getIntents() called  = ${startToDayWeeks}")
     }
     //바인딩
     fun setBinding() {
@@ -101,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 if (tab != null) {
                     selectTab=tab.position
                     Log.d(Constants.TAG, "----------$day 선택, / tab 포지션 = ${tab.position} -----------")
-                    mainViewModel.getWebtoonData(platform = platform.toString(),day)//선택된 요일의 웹툰 데이터 검색하기
+                    mainViewModel.getWebtoonData(platform = platform.toString(),day) //선택된 요일의 웹툰 데이터 검색하기
                 }
             }
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
@@ -112,48 +95,49 @@ class MainActivity : AppCompatActivity() {
         })
     }
     //프래그먼트 생성하고 그수만큼 탭바 생성
-    fun setTabsFragment(){
+    fun setTabsFragment() {
+        //요일만큼 프래그먼트 생성
+        startToDayWeeks.forEach {
+            fragments.add(mainFragment())
+        }
+        pagerAdapter = WeekFragmentStateAdapter(fragments, this)
 
-//        for (a in startToDayWeeks){
-//            var fragment=mainFragment(a)
-//            fragments.add(fragment)
-//            Log.d(Constants.TAG,"프래그먼트 추가됨 $a  프래그먼트 주소${fragment}")
-//            pagerAdapter.addFragment(fragment)
-//        }
-        binding.viewPager.adapter=pagerAdapter
-        binding.viewPager.offscreenPageLimit=5
+        binding.viewPager.adapter = pagerAdapter
+        // binding.viewPager.offscreenPageLimit=5
         //binding.viewPager.isUserInputEnabled=false  // 스와이프 막기
         //탭바를 프래그먼트 수만클 생성
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
-            tab.text =startToDayWeeks[position]
+            tab.text = startToDayWeeks[position]
             //tabs.add(tab)
         }.attach()
     }
-//액션바 사용을 위한 오버라이드 함수
+
+    //액션바 사용을 위한 오버라이드 함수
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.platform_menu, menu)
         if (menu != null) {
-            menuItem=menu.findItem(R.id.menu_naver)
+            menuItem = menu.findItem(R.id.menu_naver)
         }
-    onOptionsItemSelected(menuItem)
+        onOptionsItemSelected(menuItem)
         //Log.d(Constants.TAG, "MainActivity - onCreateOptionsMenu() calle ")
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.menu_naver -> {
                 Toast.makeText(this, "네이버 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 네이버 선택 ")
                 binding.mainActivityLayout.setBackgroundColor(Color.GREEN)
-                platform=PLATFORM.naver
+                platform = PLATFORM.naver
 
             }
             R.id.menu_kakao -> {
                 Toast.makeText(this, "카카오 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 선택 ")
                 binding.mainActivityLayout.setBackgroundColor(Color.YELLOW)
-                platform=PLATFORM.kakao
+                platform = PLATFORM.kakao
             }
         }
         return super.onOptionsItemSelected(item)

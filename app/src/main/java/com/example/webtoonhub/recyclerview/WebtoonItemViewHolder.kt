@@ -26,33 +26,25 @@ class WebtoonItemViewHolder (val binding: LayoutWebtoonItemBinding,val context: 
 
     fun bindWithView(item:WebToonData){
         Log.d(Constants.TAG,"PhotoItemViewHolder - bindWithView() called/${item.thumbnail}/")
-        //이미지만을 위한 어댑터를  Photo클래스 안에 이미지 바인딩 어댑터함수를 따로 선언하고 xml파일에서 함수이름=@{이미지url} 을 선언히여 사용가능
         with(binding){
             webtoonItem=item
             loadPhotoImage(webtoonThumbnail,item.thumbnail,item.url)
         }
     }
-    fun loadPhotoImage(view: ImageView, imageUrl: String?, downloadUrl:String?) {
+    fun loadPhotoImage(view: ImageView, imageUrl: String?, showUrl:String?) {
         Log.d(Constants.TAG,"!!!!PhotoItemViewHolder - loadPhotoImage() called/$imageUrl")
-//        val glideUrl = GlideUrl(
-//            imageUrl, LazyHeaders.Builder()
-//                .addHeader(
-//                    "User-Agent",
-//                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit / 537.36(KHTML, like Gecko) Chrome  47.0.2526.106 Safari / 537.36"
-//                )
-//                .build()
-//        )
+
         val glideUrl = GlideUrl(imageUrl)
-        Glide.with(App.instance)
+        Glide.with(context)
             .load(glideUrl)//표시할 이미지 값(링크).
             .placeholder(R.drawable.ic_baseline_insert_photo_24)//이미지가 없으면 나오는 기본 화면
             .into(view)//표시할 이미지 뷰
         view.setOnClickListener{
-            //photocollectionactivity에서 다운로드 액티비티를 호출위해
-            // photocollectionactivity의 context를 어댑터 생성시에 받아오고 그것을 holder생성시에 받아와서 사용
+            //mainaFragment에서 웹뷰 액티비티를 호출위해
+            // mainaFragment에서의 context를 어댑터 생성시에 받아오고 그것을 holder생성시에 받아와서 사용
             //액티비티가아닌 viewholderd에서 사용하기 때문에 context가 필요
             val nextIntent = Intent(context, WebViewActivity::class.java)
-            nextIntent.putExtra("view_url", downloadUrl)
+            nextIntent.putExtra("view_url", showUrl)
             context.startActivity(nextIntent)
         }
     }

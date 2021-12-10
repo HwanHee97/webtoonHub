@@ -31,4 +31,5 @@ class WebtoonRecyclerViewAdapter(var webtoonList: ArrayList<WebToonData>, val co
         notifyDataSetChanged()
     }
 
+
 }

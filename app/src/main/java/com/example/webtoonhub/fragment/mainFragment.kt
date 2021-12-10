@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.webtoonhub.MainViewModel
@@ -16,20 +17,17 @@ import com.example.webtoonhub.model.WebToonData
 import com.example.webtoonhub.recyclerview.WebtoonRecyclerViewAdapter
 import com.example.webtoonhub.utils.Constants
 
-private lateinit var binding: FragmentMainBinding
-private lateinit var mainViewModel: MainViewModel
 
 class mainFragment() : Fragment() {
-    // TODO: Rename and change types of parameters
-
-
+    private lateinit var binding: FragmentMainBinding
     private var webtoonDataList=ArrayList<WebToonData>()
     private  val webtoonRecyclerViewAdapter : WebtoonRecyclerViewAdapter by lazy {
-        WebtoonRecyclerViewAdapter(webtoonDataList,this.requireContext()) }//선언과 동시에 초기화
+        WebtoonRecyclerViewAdapter(webtoonDataList,this.requireContext())
+    }//선언과 동시에 초기화
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(Constants.TAG,"mainFragment - onCreate() called")
-
     }
 
     override fun onCreateView(
@@ -41,7 +39,6 @@ class mainFragment() : Fragment() {
         binding=DataBindingUtil.inflate(inflater,R.layout.fragment_main,container,false)
         setBinding()
         setRecyclerView()
-       // setObserve()
         return binding.root
     }
 
@@ -58,8 +55,8 @@ class mainFragment() : Fragment() {
         }
     }
 
-
     fun setData(responseDataArrayList: ArrayList<WebToonData>?) {
+
         Log.d(Constants.TAG,"mainFragment - setData() called ${responseDataArrayList?.get(1)?.title} // $this")
         if (responseDataArrayList == null) {
             Log.e(Constants.TAG,"Null!!!!!!")
@@ -70,13 +67,6 @@ class mainFragment() : Fragment() {
         }
         //webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
         webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        webtoonDataList
-        webtoonRecyclerViewAdapter
     }
 
 }
