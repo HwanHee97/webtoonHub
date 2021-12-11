@@ -17,7 +17,6 @@ import com.example.webtoonhub.model.WebToonData
 import com.example.webtoonhub.recyclerview.WebtoonRecyclerViewAdapter
 import com.example.webtoonhub.utils.Constants
 
-
 class mainFragment() : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private var webtoonDataList=ArrayList<WebToonData>()
@@ -36,16 +35,10 @@ class mainFragment() : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         Log.d(Constants.TAG,"mainFragment - onCreateView() called")
-        binding=DataBindingUtil.inflate(inflater,R.layout.fragment_main,container,false)
-        setBinding()
+        //binding=DataBindingUtil.inflate(inflater,R.layout.fragment_main,container,false)
+        binding= FragmentMainBinding.inflate(layoutInflater)
         setRecyclerView()
         return binding.root
-    }
-
-    fun setBinding(){
-        Log.d(Constants.TAG,"mainFragment - setBinding() called")
-        //binding= FragmentMainBinding.inflate(layoutInflater)
-        //mainViewModel=ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
     }
 
     fun setRecyclerView(){
@@ -63,7 +56,6 @@ class mainFragment() : Fragment() {
         }
         if (responseDataArrayList != null) {
             webtoonDataList=responseDataArrayList
-            binding.item="${webtoonDataList[1].title} -> 첫번째 아이템 제목~~"
         }
         //webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
         webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)

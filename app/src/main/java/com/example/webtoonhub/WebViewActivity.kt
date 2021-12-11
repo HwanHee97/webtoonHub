@@ -16,7 +16,7 @@ class WebViewActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(Constants.TAG,"DownloadWedViewActivity - onCreate() called ")
+        //Log.d(Constants.TAG,"WebViewActivity - onCreate() called ")
         setBinding()
         setContentView(binding.root)
         setActionBar()
@@ -26,7 +26,7 @@ class WebViewActivity: AppCompatActivity() {
     }//onCreate()
 
     fun setBinding(){
-        Log.d(Constants.TAG,"DownloadWedViewActivity - setBinding() called ")
+        //Log.d(Constants.TAG,"WebViewActivity - setBinding() called ")
         binding = ActivityWebViewBinding.inflate(layoutInflater)
     }
     //액션바 설정
@@ -38,7 +38,7 @@ class WebViewActivity: AppCompatActivity() {
     //url 받기
     fun getIntents(){
         url=intent.getStringExtra("view_url") as String
-        Log.d(Constants.TAG,"WebViewActivity - getIntents() called / url: $url ")
+        //Log.d(Constants.TAG,"WebViewActivity - getIntents() called / url: $url ")
     }
     //웹뷰에 url연결해서 띄우기
     fun setWebView(){

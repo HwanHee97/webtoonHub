@@ -21,9 +21,6 @@ import com.example.webtoonhub.model.WebToonData
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
@@ -54,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     fun setObserve(){//
         //Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
         mainViewModel.webtoonDataList.observe(this, androidx.lifecycle.Observer {
-            Log.d(Constants.TAG,"MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[1].title} //${pagerAdapter.getFragment(selectTab)}")
+            //Log.d(Constants.TAG,"MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[1].title} //${pagerAdapter.getFragment(selectTab)}")
             pagerAdapter.getFragment(selectTab).setData(it)
         })
     }
@@ -62,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     //splashActivity로부터 인텐트 받기
     fun getIntents() {
         startToDayWeeks= intent.getStringArrayListExtra("startToDayWeeks") as ArrayList<String>
-        Log.d(Constants.TAG,"MainActivity - getIntents() called  = ${startToDayWeeks}")
+        //Log.d(Constants.TAG,"MainActivity - getIntents() called  = ${startToDayWeeks}")
     }
     //바인딩
     fun setBinding() {

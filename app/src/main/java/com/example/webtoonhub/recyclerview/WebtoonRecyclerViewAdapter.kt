@@ -13,7 +13,7 @@ class WebtoonRecyclerViewAdapter(var webtoonList: ArrayList<WebToonData>, val co
     RecyclerView.Adapter<WebtoonItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WebtoonItemViewHolder {
-        Log.d(Constants.TAG,"PhotoGridRecyclerViewAdapter - onCreateViewHolder() called")
+        Log.d(Constants.TAG,"WebtoonRecyclerViewAdapter - onCreateViewHolder() called")
         val binding = LayoutWebtoonItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
 
         return WebtoonItemViewHolder(binding,context)
