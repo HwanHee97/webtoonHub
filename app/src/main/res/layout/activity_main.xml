@@ -17,13 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:liftOnScroll="true">
-            <!--
-            AppBarLayout에서  liftOnScroll은 스크롤 됐을때 메뉴바를 보이게 할지 안할지
-            liftOnScrollTargetViewId 는 어떤 아이디의 뷰가 스크롤됐을때 바가 사라져야하는지.
-            layout_scrollFlags 속성 scroll=이뷰가 화면에서 사라질수있다.,
-            enterAlways = scroll 옵션과 같이 사용될 때 위쪽으로 스크롤하는 경우는 사라지고 아래쪽으로 스크롤하는경우는 다시 나타난다.
-            snap = 스크롤이 종료될 때 View가 부분적으로만 표시되면, 자석처럼 View가 스냅되어 가장 가까운 가장자리로 스크롤됩니다.
-            -->
+
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/top_app_bar"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
@@ -33,7 +27,6 @@
                 app:menu="@menu/platform_menu"
                 app:titleTextColor="@color/black" />
         </com.google.android.material.appbar.AppBarLayout>
-
 
         <LinearLayout
             android:id="@+id/tabs_layout"
@@ -53,7 +46,6 @@
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
