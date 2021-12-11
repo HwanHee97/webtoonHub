@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var menuItem:MenuItem
     private lateinit var pagerAdapter:WeekFragmentStateAdapter
-    private  var platform:PLATFORM=PLATFORM.naver//네이버가 기본설정
+    private  var platform:PLATFORM=PLATFORM.NAVER//네이버가 기본설정
     var fragments : ArrayList<mainFragment> = ArrayList()
     var startToDayWeeks:ArrayList<String> = ArrayList()//인텐트로 받아올 오늘요일부터 시작하는 요일 리스트
     //val pagerAdapter by lazy { WeekFragmentStateAdapter(supportFragmentManager,lifecycle,dayweeks) }
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         setTabsListener()//요일 선택하는 탭바의 클릭 이벤트리스너//통신
         setTabsFragment()//프래그먼트 생성하고 그수만큼 탭바 생성
         setObserve()
+        //Log.d(Constants.TAG,"MainActivity -$selectTab")
 
     }//onCreate
 
@@ -84,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 if (tab != null) {
                     selectTab=tab.position
                     Log.d(Constants.TAG, "----------$day 선택, / tab 포지션 = ${tab.position} -----------")
-                    mainViewModel.getWebtoonData(platform = platform.toString(),day) //선택된 요일의 웹툰 데이터 검색하기
+                    mainViewModel.getWebtoonData(platform = platform.string,day) //선택된 요일의 웹툰 데이터 검색하기
                 }
             }
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
@@ -129,15 +130,23 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_naver -> {
                 Toast.makeText(this, "네이버 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 네이버 선택 ")
-                binding.mainActivityLayout.setBackgroundColor(Color.GREEN)
-                platform = PLATFORM.naver
-
+                binding.mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
+                platform = PLATFORM.NAVER
+                mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao -> {
                 Toast.makeText(this, "카카오 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 선택 ")
-                binding.mainActivityLayout.setBackgroundColor(Color.YELLOW)
-                platform = PLATFORM.kakao
+                binding.mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
+                platform = PLATFORM.KAKAO
+                mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
+            }
+            R.id.menu_kakao_page -> {
+                Toast.makeText(this, "카카오 페이지 선택", Toast.LENGTH_SHORT).show()
+                Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 페이지 선택 ")
+                binding.mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
+                platform = PLATFORM.KAKAOPAGE
+                mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
         }
         return super.onOptionsItemSelected(item)

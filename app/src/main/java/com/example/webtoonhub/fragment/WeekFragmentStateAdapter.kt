@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.adapter.FragmentViewHolder
 import com.example.webtoonhub.utils.Constants
 
 class WeekFragmentStateAdapter(val fragments:ArrayList<mainFragment>, fragmentActivity: FragmentActivity)
@@ -20,6 +21,7 @@ class WeekFragmentStateAdapter(val fragments:ArrayList<mainFragment>, fragmentAc
 //        //Log.d(Constants.TAG,"startToDayWeeks크기 : ${startToDayWeeks.size}")
 //        return startToDayWeeks.size
 //    }
+
 
 //
 //    override fun createFragment(position: Int): Fragment {

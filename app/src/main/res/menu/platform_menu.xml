@@ -12,5 +12,9 @@
         android:title="카카오"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_kakao_page"
+        android:title="카카오페이지"
+        app:showAsAction="always" />
 
 </menu>
