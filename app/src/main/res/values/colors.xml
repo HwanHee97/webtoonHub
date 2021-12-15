@@ -11,4 +11,5 @@
     <color name="kakao_background">#FFC286</color>
     <color name="kakao_page_background">#FFF1AF</color>
     <color name="web_view_toolbar_background">#673AB7</color>
+    <color name="my_status_bar_color">#66806A</color>
 </resources>

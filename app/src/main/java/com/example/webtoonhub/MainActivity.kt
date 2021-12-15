@@ -3,9 +3,12 @@ package com.example.webtoonhub
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputFilter
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import android.widget.SearchView
 import android.widget.Toast
 import com.example.webtoonhub.databinding.ActivityMainBinding
 import com.example.webtoonhub.fragment.WeekFragmentStateAdapter
@@ -21,15 +24,17 @@ import com.example.webtoonhub.model.WebToonData
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
+androidx.appcompat.widget.SearchView.OnQueryTextListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var menuItem:MenuItem
     private lateinit var pagerAdapter:WeekFragmentStateAdapter
     private  var platform:PLATFORM=PLATFORM.NAVER//네이버가 기본설정
+    private lateinit var mySearchView: androidx.appcompat.widget.SearchView
+    private lateinit var mySearchViewEditText: EditText
     var fragments : ArrayList<mainFragment> = ArrayList()
     var startToDayWeeks:ArrayList<String> = ArrayList()//인텐트로 받아올 오늘요일부터 시작하는 요일 리스트
-    //val pagerAdapter by lazy { WeekFragmentStateAdapter(supportFragmentManager,lifecycle,dayweeks) }
     var selectTab:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     //splashActivity로부터 인텐트 받기
     fun getIntents() {
         startToDayWeeks= intent.getStringArrayListExtra("startToDayWeeks") as ArrayList<String>
-        //Log.d(Constants.TAG,"MainActivity - getIntents() called  = ${startToDayWeeks}")
+        Log.d(Constants.TAG,"MainActivity - getIntents() called  = ${startToDayWeeks}")
     }
     //바인딩
     fun setBinding() {
@@ -101,8 +106,7 @@ class MainActivity : AppCompatActivity() {
         pagerAdapter = WeekFragmentStateAdapter(fragments, this)
 
         binding.viewPager.adapter = pagerAdapter
-        // binding.viewPager.offscreenPageLimit=5
-        //binding.viewPager.isUserInputEnabled=false  // 스와이프 막기
+
         //탭바를 프래그먼트 수만클 생성
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = startToDayWeeks[position]
@@ -118,8 +122,51 @@ class MainActivity : AppCompatActivity() {
             menuItem = menu.findItem(R.id.menu_naver)
         }
         onOptionsItemSelected(menuItem)
+        this.mySearchView= menu?.findItem(R.id.search_menu_item)?.actionView as androidx.appcompat.widget.SearchView
+        this.mySearchView.apply {
+            this.queryHint="검색어를 입력해 주세요"
+            this.setOnQueryTextListener(this@MainActivity)
+            this.setOnQueryTextFocusChangeListener{_, hasExpaned->
+                when(hasExpaned){
+                    true->{
+                        Log.d(Constants.TAG,"서치뷰 열림 ")
+                    }
+                    false->{
+                        Log.d(Constants.TAG,"서치뷰 닫힘 ")
+                    }
+                }
+            }
+            //searchviewEditText 가져오기
+            mySearchViewEditText=this.findViewById(androidx.appcompat.R.id.search_src_text)
+        }
+        this.mySearchViewEditText.apply {
+            this.filters= arrayOf(InputFilter.LengthFilter(12))//검색글자수 12 로 제한
+            this.setTextColor(Color.WHITE)
+            this.setHintTextColor(Color.WHITE)
+        }
         //Log.d(Constants.TAG, "MainActivity - onCreateOptionsMenu() calle ")
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        Log.d(Constants.TAG,"MainActivity - onQueryTextSubmit() called / query: ${query}")
+        if(!query.isNullOrEmpty()){
+
+            //api호출!!!!!
+            mainViewModel.getSearchCustomizeWebtoonData(query)
+        }
+        binding.topAppBar.collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        Log.d(Constants.TAG,"MainActivity - onQueryTextSubmit() called / newText: ${newText}")
+        val userInputText = newText?:""//입력된값이 없으면 ""을 넣겠다
+        if (userInputText.count()==12){
+            Toast.makeText(this,"12자까지 검색가능 합니다.",Toast.LENGTH_SHORT).show()
+            Log.d(Constants.TAG,"12자까지 검색가능 합니다.${userInputText.count()}")
+        }
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -148,5 +195,6 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 
 }

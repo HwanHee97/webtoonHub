@@ -19,7 +19,7 @@ import kotlin.collections.ArrayList
 class SplashActivity:AppCompatActivity() {
     private lateinit var binding:ActivitySplashBinding
     var dayWeek: API_DAY_WEEK=API_DAY_WEEK.MONDAY//기본요일을 월요일로 설정
-    var dayweeks : ArrayList<String> = arrayListOf("월","화","수","목","금","토","일","완결")//텝 생성을 위한 배열
+    var dayweeks : ArrayList<String> = arrayListOf("월","화","수","목","금","토","일")//텝 생성을 위한 배열
     var startToDayWeeks:ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,11 +53,11 @@ class SplashActivity:AppCompatActivity() {
             startToDayWeeks.add(dayweeks[i])
             i++
             //Log.d(Constants.TAG,"i = $i / added ${dayweeks[i-1]}")
-            if (i==8){
+            if (i==7){
                 //Log.d(Constants.TAG,"i가 8이다 = $i")
                 i=0
             }
-        }while (startToDayWeeks.size<8)
+        }while (startToDayWeeks.size<7)
         //Log.d(Constants.TAG,"tempDayWeeks $startToDayWeeks tempDayWeeks.size=${startToDayWeeks.size}")
     }
 

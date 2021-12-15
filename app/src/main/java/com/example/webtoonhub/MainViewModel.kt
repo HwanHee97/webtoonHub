@@ -1,5 +1,6 @@
 package com.example.webtoonhub
 
+import android.app.DownloadManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,7 +24,7 @@ class MainViewModel: ViewModel() {
         viewModelScope.launch {
             var queryWeek=changeWeekQuery(week)
 
-            RetrofitManager.instance.getWeekWebtoonData(searchPlatform=platform, searchTerm = queryWeek, completion = {
+            RetrofitManager.instance.getWeekWebtoonData(type = "search",searchPlatform=platform, searchTerm = queryWeek, completion = {
                 responseState, responseDataArrayList ->
             when (responseState) {
                 RESPONSE_STATUS.OKAY -> {
@@ -39,9 +40,33 @@ class MainViewModel: ViewModel() {
                     Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
                 }
             }
-        })
+            })
+        }
     }
+    fun getSearchCustomizeWebtoonData(searchQuery:String ){
+        viewModelScope.launch {
+
+            RetrofitManager.instance.getWeekWebtoonData(type = "searchCustomize",searchPlatform=null, searchTerm = searchQuery, completion = {
+                    responseState, responseDataArrayList ->
+                when (responseState) {
+                    RESPONSE_STATUS.OKAY -> {
+                        Log.d(Constants.TAG, "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}")
+                        _webtoonDataList.value=responseDataArrayList
+                    }
+                    RESPONSE_STATUS.FAIL -> {
+
+                        Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
+                    }
+                    RESPONSE_STATUS.NO_CONTENT -> {
+
+                        Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
+                    }
+                }
+            })
+        }
+
     }
+
     fun changeWeekQuery(week: String) :String{
         return when(week) {
             "월" ->"mon"
