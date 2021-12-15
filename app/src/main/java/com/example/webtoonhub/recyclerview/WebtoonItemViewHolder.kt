@@ -57,6 +57,14 @@ class WebtoonItemViewHolder (val binding: LayoutWebtoonItemBinding,val context: 
                 item.thumbnail?.let { loadUrl(it) }
             }
             setOnClickListener(itemLayoutId,item.url)
+            if (item.new){
+                additionalLayout.visibility=View.VISIBLE
+                newImg.visibility=View.VISIBLE
+            }
+            if(item.up){
+                additionalLayout.visibility=View.VISIBLE
+                updateImg.visibility=View.VISIBLE
+            }
         }
     }
     fun loadThumbnailImage(view: ImageView, imageUrl: String?, showUrl:String?) {

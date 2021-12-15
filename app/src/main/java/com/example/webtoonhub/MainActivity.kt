@@ -214,5 +214,4 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         return super.onOptionsItemSelected(item)
     }
 
-
 }

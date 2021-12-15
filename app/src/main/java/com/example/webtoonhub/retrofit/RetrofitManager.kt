@@ -58,13 +58,20 @@ class RetrofitManager {
                                     if (type=="search") {//커스텀 검색시 week값이 json에 없기때운에 조건문 처리
                                          week = resultItemObject.get("week").asInt
                                     }
+                                    val additionalObject = resultItemObject.getAsJsonObject("additional").asJsonObject
+                                    val new:Boolean=additionalObject.get("new").asBoolean
+                                    val up:Boolean=additionalObject.get("up").asBoolean
+
+
                                     val webtoonItem = WebToonData(
                                         title = title,
                                         author = author,
                                         url = url,
                                         thumbnail = thumbnail,
                                         platform = platform,
-                                        week = week
+                                        week = week,
+                                        new = new,
+                                        up =up
                                     )
                                     parsedWeebtoonDataArrayList.add(webtoonItem)
                                 }catch (e:NullPointerException){
