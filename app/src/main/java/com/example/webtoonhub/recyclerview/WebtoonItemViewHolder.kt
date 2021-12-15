@@ -31,20 +31,30 @@ import com.example.webtoonhub.*
 
 class WebtoonItemViewHolder (val binding: LayoutWebtoonItemBinding,val context: Context):RecyclerView.ViewHolder(binding.root){
 
-    fun bindWithView(item:WebToonData){
-        Log.d(Constants.TAG,"WebtoonItemViewHolder - bindWithView() called/${item.thumbnail}/")
-        with(binding){
-            wbImg.visibility=View.GONE
-            webtoonThumbnail.visibility=View.VISIBLE
-            webtoonItem=item
-            loadThumbnailImage(webtoonThumbnail,item.thumbnail,item.url)
+    fun bindWithView(item: WebToonData) {
+        Log.d(Constants.TAG, "WebtoonItemViewHolder - bindWithView() called/${item.thumbnail}/")
+        with(binding) {
+            wbImg.visibility = View.GONE
+            webtoonThumbnail.visibility = View.VISIBLE
+            additionalLayout.visibility = View.GONE
+            webtoonItem = item
+            loadThumbnailImage(webtoonThumbnail, item.thumbnail, item.url)
+            if (item.new) {
+                additionalLayout.visibility = View.VISIBLE
+                newImg.visibility = View.VISIBLE
+            }
+            if (item.up) {
+                additionalLayout.visibility = View.VISIBLE
+                updateImg.visibility = View.VISIBLE
+            }
         }
     }
     fun bindWithNaverView(item: WebToonData) {
         Log.d(Constants.TAG, "WebtoonItemViewHolder - bindWithNaverView() called/${item.thumbnail}/")
         with(binding) {
-            webtoonThumbnail.visibility=View.GONE
-            wbImg.visibility=View.VISIBLE
+            webtoonThumbnail.visibility = View.GONE
+            wbImg.visibility = View.VISIBLE
+            additionalLayout.visibility = View.GONE
             webtoonItem = item
             wbImg.apply {
                 settings.javaScriptEnabled = false
@@ -56,19 +66,19 @@ class WebtoonItemViewHolder (val binding: LayoutWebtoonItemBinding,val context: 
                 }
                 item.thumbnail?.let { loadUrl(it) }
             }
-            setOnClickListener(itemLayoutId,item.url)
-            if (item.new){
-                additionalLayout.visibility=View.VISIBLE
-                newImg.visibility=View.VISIBLE
+            setOnClickListener(itemLayoutId, item.url)
+            if (item.new) {
+                additionalLayout.visibility = View.VISIBLE
+                newImg.visibility = View.VISIBLE
             }
-            if(item.up){
-                additionalLayout.visibility=View.VISIBLE
-                updateImg.visibility=View.VISIBLE
+            if (item.up) {
+                additionalLayout.visibility = View.VISIBLE
+                updateImg.visibility = View.VISIBLE
             }
         }
     }
-    fun loadThumbnailImage(view: ImageView, imageUrl: String?, showUrl:String?) {
-        Log.d(Constants.TAG,"!!!!WebtoonItemViewHolder - loadPhotoImage() called/$imageUrl")
+    fun loadThumbnailImage(view: ImageView, imageUrl: String?, showUrl: String?) {
+        Log.d(Constants.TAG, "!!!!WebtoonItemViewHolder - loadPhotoImage() called/$imageUrl")
         //skipMemoryCache() : 메모리에 캐싱하지 않으려면 true로 준다//diskCacheStrategy() : 디스크에 캐싱하지 않으려면 DiskCacheStrategy.NONE로 준다. 다음과 같은 옵션이 있다. (ALL, AUTOMATIC, DATA, NONE, RESOURCE)
         val options = RequestOptions()
             .skipMemoryCache(true)
@@ -81,7 +91,7 @@ class WebtoonItemViewHolder (val binding: LayoutWebtoonItemBinding,val context: 
             .error(R.drawable.ic_launcher_foreground)//이미지 불러오기 애러시 나오는 화면
             .apply(options)
             .into(view) //표시할 이미지 뷰
-            setOnClickListener(binding.itemLayoutId,showUrl)
+        setOnClickListener(binding.itemLayoutId, showUrl)
     }
     fun setOnClickListener(layoutView: CardView, showUrl: String?) {
         layoutView.setOnClickListener {

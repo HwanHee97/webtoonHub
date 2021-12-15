@@ -19,9 +19,7 @@ class WebtoonRecyclerViewAdapter(var webtoonList: ArrayList<WebToonData>, val co
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WebtoonItemViewHolder {
         Log.d(Constants.TAG,"WebtoonRecyclerViewAdapter - onCreateViewHolder() called")
-
         val binding = LayoutWebtoonItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-
         return WebtoonItemViewHolder(binding,context)
     }
     //뷰홀더에 있는 바인드 함수 호출,  리스트값 하나씩 전달
@@ -36,10 +34,10 @@ class WebtoonRecyclerViewAdapter(var webtoonList: ArrayList<WebToonData>, val co
     override fun getItemCount(): Int {
         return this.webtoonList.size
     }
-    fun notifyDataChange(list:ArrayList<WebToonData>){
-        webtoonList=list
+
+    fun notifyDataChange(list: ArrayList<WebToonData>) {
+        webtoonList = list
         notifyDataSetChanged()
     }
-
 
 }

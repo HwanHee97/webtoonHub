@@ -31,10 +31,7 @@ class mainFragment() : Fragment() {
         Log.d(Constants.TAG,"mainFragment - onCreate() called")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         Log.d(Constants.TAG, "mainFragment - onCreateView() called")
         //binding=DataBindingUtil.inflate(inflater,R.layout.fragment_main,container,false)
@@ -57,7 +54,6 @@ class mainFragment() : Fragment() {
         if (responseDataArrayList != null) {
             webtoonDataList = responseDataArrayList
         }
-        //webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
         webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
     }
 

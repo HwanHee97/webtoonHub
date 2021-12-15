@@ -53,24 +53,22 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         //Log.d(Constants.TAG,"MainActivity -$selectTab")
 
     }//onCreate
-
-    fun setObserve(){//
+    fun setObserve() {//
         //Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
         mainViewModel.webtoonDataList.observe(this, androidx.lifecycle.Observer {
             //Log.d(Constants.TAG,"MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[1].title} //${pagerAdapter.getFragment(selectTab)}")
             pagerAdapter.getFragment(selectTab).setData(it)
         })
     }
-
     //splashActivity로부터 인텐트 받기
     fun getIntents() {
-        startToDayWeeks= intent.getStringArrayListExtra("startToDayWeeks") as ArrayList<String>
-        Log.d(Constants.TAG,"MainActivity - getIntents() called  = ${startToDayWeeks}")
+        startToDayWeeks = intent.getStringArrayListExtra("startToDayWeeks") as ArrayList<String>
+        Log.d(Constants.TAG, "MainActivity - getIntents() called  = ${startToDayWeeks}")
     }
     //바인딩
     fun setBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
-        mainViewModel=ViewModelProvider(this).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
     // 액션바의 오버라이드 함수로 (네이버,카카오)플랫폼 선택하는 액션바 설정
     fun setActionBar() {
@@ -105,9 +103,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             fragments.add(mainFragment())
         }
         pagerAdapter = WeekFragmentStateAdapter(fragments, this)
-
         binding.viewPager.adapter = pagerAdapter
-
         //탭바를 프래그먼트 수만클 생성
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = startToDayWeeks[position]
@@ -138,10 +134,10 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 }
             }
             //searchviewEditText 가져오기
-            mySearchViewEditText=this.findViewById(androidx.appcompat.R.id.search_src_text)
+            mySearchViewEditText = this.findViewById(androidx.appcompat.R.id.search_src_text)
         }
         this.mySearchViewEditText.apply {
-            this.filters= arrayOf(InputFilter.LengthFilter(12))//검색글자수 12 로 제한
+            this.filters = arrayOf(InputFilter.LengthFilter(12))//검색글자수 12 로 제한
             this.setTextColor(Color.WHITE)
             this.setHintTextColor(Color.WHITE)
         }
@@ -150,9 +146,8 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     }
     //검색 눌렸을때
     override fun onQueryTextSubmit(query: String?): Boolean {
-        Log.d(Constants.TAG,"MainActivity - onQueryTextSubmit() called / query: ${query}")
-        if(!query.isNullOrEmpty()){
-
+        Log.d(Constants.TAG, "MainActivity - onQueryTextSubmit() called / query: ${query}")
+        if (!query.isNullOrEmpty()) {
             //api호출!!!!!
             mainViewModel.getSearchCustomizeWebtoonData(query)
         }
@@ -162,17 +157,17 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
                 setBackgroundColor(getColor(R.color.search_app_bar_background))
             }
-            tabsLayout.visibility=View.GONE
+            tabsLayout.visibility = View.GONE
         }
         return true
     }
     //텍스트 입력시
     override fun onQueryTextChange(newText: String?): Boolean {
-        Log.d(Constants.TAG,"MainActivity - onQueryTextSubmit() called / newText: ${newText}")
-        val userInputText = newText?:""//입력된값이 없으면 ""을 넣겠다
-        if (userInputText.count()==12){
-            Toast.makeText(this,"12자까지 검색가능 합니다.",Toast.LENGTH_SHORT).show()
-            Log.d(Constants.TAG,"12자까지 검색가능 합니다.${userInputText.count()}")
+        Log.d(Constants.TAG, "MainActivity - onQueryTextSubmit() called / newText: ${newText}")
+        val userInputText = newText ?: ""//입력된값이 없으면 ""을 넣겠다
+        if (userInputText.count() == 12) {
+            Toast.makeText(this, "12자까지 검색가능 합니다.", Toast.LENGTH_SHORT).show()
+            Log.d(Constants.TAG, "12자까지 검색가능 합니다.${userInputText.count()}")
         }
         return true
     }
