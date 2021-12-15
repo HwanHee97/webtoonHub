@@ -25,7 +25,8 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:menu="@menu/platform_menu"
-                app:titleTextColor="@color/black" />
+                app:titleTextColor="@color/black"
+                app:titleTextAppearance="@style/MaterialAlertDialog.MaterialComponents.Title.Text"/>
         </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout

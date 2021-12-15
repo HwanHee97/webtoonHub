@@ -8,8 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="naver_background">#B4C6A6</color>
-    <color name="kakao_background">#FFC286</color>
-    <color name="kakao_page_background">#FFF1AF</color>
+    <color name="kakao_background">#ECD155</color>
+    <color name="kakao_page_background">#FFC286</color>
+    <color name="search_background">#23B3F4</color>
+    <color name="search_app_bar_background">#0B61F8</color>
     <color name="web_view_toolbar_background">#673AB7</color>
     <color name="my_status_bar_color">#66806A</color>
 </resources>

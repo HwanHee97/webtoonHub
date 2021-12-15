@@ -7,6 +7,7 @@ import android.text.InputFilter
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Toast
@@ -147,7 +148,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         //Log.d(Constants.TAG, "MainActivity - onCreateOptionsMenu() calle ")
         return super.onCreateOptionsMenu(menu)
     }
-
+    //검색 눌렸을때
     override fun onQueryTextSubmit(query: String?): Boolean {
         Log.d(Constants.TAG,"MainActivity - onQueryTextSubmit() called / query: ${query}")
         if(!query.isNullOrEmpty()){
@@ -155,10 +156,17 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             //api호출!!!!!
             mainViewModel.getSearchCustomizeWebtoonData(query)
         }
-        binding.topAppBar.collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
+        binding.apply {
+            mainActivityLayout.setBackgroundColor(getColor(R.color.search_background))
+            topAppBar.apply {
+                collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
+                setBackgroundColor(getColor(R.color.search_app_bar_background))
+            }
+            tabsLayout.visibility=View.GONE
+        }
         return true
     }
-
+    //텍스트 입력시
     override fun onQueryTextChange(newText: String?): Boolean {
         Log.d(Constants.TAG,"MainActivity - onQueryTextSubmit() called / newText: ${newText}")
         val userInputText = newText?:""//입력된값이 없으면 ""을 넣겠다
@@ -170,25 +178,35 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        binding.tabsLayout.visibility=View.VISIBLE
         when (item?.itemId) {
             R.id.menu_naver -> {
                 Toast.makeText(this, "네이버 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 네이버 선택 ")
-                binding.mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
+                binding.apply {
+                    mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
+                    topAppBar.setBackgroundColor(getColor(R.color.naver_background))
+                }
                 platform = PLATFORM.NAVER
                 mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao -> {
                 Toast.makeText(this, "카카오 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 선택 ")
-                binding.mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
+               binding.apply {
+                   mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
+                   topAppBar.setBackgroundColor(getColor(R.color.kakao_background))
+               }
                 platform = PLATFORM.KAKAO
                 mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao_page -> {
                 Toast.makeText(this, "카카오 페이지 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 페이지 선택 ")
-                binding.mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
+                binding.apply {
+                    mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
+                    topAppBar.setBackgroundColor(getColor(R.color.kakao_page_background))
+                }
                 platform = PLATFORM.KAKAOPAGE
                 mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
