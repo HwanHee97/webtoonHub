@@ -1,12 +1,11 @@
 package com.example.webtoonhub
 
-import android.app.DownloadManager
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.webtoonhub.fragment.mainFragment
 import com.example.webtoonhub.model.WebToonData
 import com.example.webtoonhub.retrofit.RetrofitManager
 import com.example.webtoonhub.utils.Constants
@@ -32,7 +31,7 @@ class MainViewModel: ViewModel() {
                     _webtoonDataList.value=responseDataArrayList
                 }
                 RESPONSE_STATUS.FAIL -> {
-
+                    Toast.makeText(App.instance,"데이터 로드 실패",Toast.LENGTH_SHORT).show()
                     Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
                 }
                 RESPONSE_STATUS.NO_CONTENT -> {
@@ -54,17 +53,14 @@ class MainViewModel: ViewModel() {
                         _webtoonDataList.value=responseDataArrayList
                     }
                     RESPONSE_STATUS.FAIL -> {
-
                         Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
                     }
                     RESPONSE_STATUS.NO_CONTENT -> {
-
                         Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
                     }
                 }
             })
         }
-
     }
 
     fun changeWeekQuery(week: String) :String{
@@ -79,5 +75,4 @@ class MainViewModel: ViewModel() {
             else -> "sun"
         }
     }
-
 }
