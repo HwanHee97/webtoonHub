@@ -23,21 +23,21 @@ object RetrofitClient {
         //로그를 찍기 위해 로깅인터셉터 설정
         val loggingInterceptor= HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger{
             override fun log(message: String) {
-                Log.d(Constants.TAG,"RetrofitClient - log() called / message : $message")
+                //Log.d(Constants.TAG,"RetrofitClient - log() called / message : $message")
                 when{
                     message.isJsonObject()-> {
-                        Log.d(Constants.TAG, "RetrofitClient -message.isJsonObject!!")
-                        Log.d(Constants.TAG, JSONObject(message).toString(4))//indentSpace=4는 들여쓰기하기
+                        //Log.d(Constants.TAG, "RetrofitClient -message.isJsonObject!!")
+                        //Log.d(Constants.TAG, JSONObject(message).toString(4))//indentSpace=4는 들여쓰기하기
                     }
                     message.isJsonArray()-> {
-                        Log.d(Constants.TAG, "RetrofitClient -message.isJsonArray!!")
-                        Log.d(Constants.TAG, JSONArray(message).toString(4))//indentSpace=4는 들여쓰기하기
+                        //Log.d(Constants.TAG, "RetrofitClient -message.isJsonArray!!")
+                        //Log.d(Constants.TAG, JSONArray(message).toString(4))//indentSpace=4는 들여쓰기하기
                     }
                     else->{
                         try {
-                            Log.d(Constants.TAG, JSONObject(message).toString(4))//indentSpace=4는 들여쓰기하기
+                            //Log.d(Constants.TAG, JSONObject(message).toString(4))//indentSpace=4는 들여쓰기하기
                         }catch (e: Exception){
-                            Log.d(Constants.TAG,message)//indentSpace=4는 들여쓰기하기
+                            //Log.d(Constants.TAG,message)//indentSpace=4는 들여쓰기하기
                         }
                     }
                 }
@@ -48,7 +48,7 @@ object RetrofitClient {
         //위에서 생성한 로깅 인터셉터를 okhttp 클라이언트에 추가한다.
         client.addInterceptor(loggingInterceptor)
         //커넥션 타임아웃
-        client.connectTimeout(10, TimeUnit.SECONDS)
+        client.connectTimeout(20, TimeUnit.SECONDS)
         client.readTimeout(10, TimeUnit.SECONDS)
         client.writeTimeout(10, TimeUnit.SECONDS)
         //실패시 다시시도 여부
