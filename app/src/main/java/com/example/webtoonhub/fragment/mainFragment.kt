@@ -54,6 +54,7 @@ class mainFragment() : Fragment() {
         if (responseDataArrayList != null) {
             webtoonDataList = responseDataArrayList
         }
+        binding.myWebtoonRecyclerView.scrollToPosition(0)
         webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
     }
 
