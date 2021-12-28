@@ -68,13 +68,19 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     fun makeWeekList( daynum:Int){
         var baseDayweeks : Array<out String> = resources.getStringArray(R.array.base_week_array)//arrays.xml에서 가져오기
         var i=daynum
-        do {
-            startToDayWeeks.add(baseDayweeks[i])
+        //요일 리스트 생성하는 알고리즘1
+//        do {
+//            startToDayWeeks.add(baseDayweeks[i])
+//            i++
+//            if (i==7){
+//                i=0
+//            }
+//        }while (startToDayWeeks.size<7)
+        //요일 리스트 생성하는 알고리즘2
+        for (e in baseDayweeks){
+            startToDayWeeks.add(baseDayweeks[i%baseDayweeks.size])
             i++
-            if (i==7){
-                i=0
-            }
-        }while (startToDayWeeks.size<7)
+        }
     }
 
     fun setObserve() {//

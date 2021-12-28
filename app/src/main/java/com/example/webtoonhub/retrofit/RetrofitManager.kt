@@ -23,10 +23,10 @@ class RetrofitManager {
     private val iRetrofit: IRetrofit? = RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
     lateinit var call:Call<JsonElement>
     var week: Int=0
-    fun getWeekWebtoonData(type:String,searchPlatform: String?,searchTerm: String?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
+    fun getWeekWebtoonData(type:String,searchPlatform: String?,searchTerm: String?,searchWeek:Int?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
         Log.d(Constants.TAG, "RetorfitManager - getWebtoonData()")
         if (type=="search") {
-            val week = searchTerm.let { it } ?: ""//searchTerm이 비어있으면""을 반환 아니면 그대로(it) //enum쿨래스의 mon~sun 값이다.
+            val week = searchWeek.let { it } ?: 0//searchTerm이 비어있으면""을 반환 아니면 그대로(it) //enum쿨래스의 mon~sun 값이다.
             val platform = searchPlatform.let { it } ?: ""
              call = iRetrofit?.search(platform = platform, searchTerm = week).let { it } ?: return //값이 없으면 return한다.있으면 it return
         }else if(type=="searchCustomize"){
@@ -54,9 +54,7 @@ class RetrofitManager {
                                         val url: String = resultItemObject.get("url").asString
                                         val thumbnail: String = resultItemObject.get("img").asString
                                         val platform: String = resultItemObject.get("service").asString
-                                        if (type=="search") {//커스텀 검색시 week값이 json에 없기때운에 조건문 처리
-                                            week = resultItemObject.get("week").asInt
-                                        }
+
                                         val additionalObject = resultItemObject.getAsJsonObject("additional").asJsonObject
                                         val new:Boolean=additionalObject.get("new").asBoolean
                                         val up:Boolean=additionalObject.get("up").asBoolean
@@ -67,7 +65,7 @@ class RetrofitManager {
                                             url = url,
                                             thumbnail = thumbnail,
                                             platform = platform,
-                                            week = week,
+
                                             new = new,
                                             up =up
                                         )

@@ -13,9 +13,9 @@ interface IRetrofit {
     fun getAll(): Call<JsonElement>
 
     @GET(API.SEARCH)//플랫폼, 요일을 매개변수로 받아 검색
-    fun search(@Path("platform") platform:String, @Query("day") searchTerm: String): Call<JsonElement>
+    fun search(@Path("platform") platform:String, @Query("day") searchTerm: Int): Call<JsonElement>
 
     @GET(API.SEARCH_CUSTOMIZE)// 데이터 검색
-    fun searchCustomize(@Query("search") searchTerm: String): Call<JsonElement>
+    fun searchCustomize(@Query("keyword") searchTerm: String): Call<JsonElement>
 
 }

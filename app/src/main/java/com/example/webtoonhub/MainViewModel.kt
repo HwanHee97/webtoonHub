@@ -23,7 +23,7 @@ class MainViewModel: ViewModel() {
         viewModelScope.launch {
             var queryWeek=changeWeekQuery(week)
 
-            RetrofitManager.instance.getWeekWebtoonData(type = "search",searchPlatform=platform, searchTerm = queryWeek, completion = {
+            RetrofitManager.instance.getWeekWebtoonData(type = "search",searchPlatform=platform, searchTerm = null,searchWeek = queryWeek, completion = {
                 responseState, responseDataArrayList ->
             when (responseState) {
                 RESPONSE_STATUS.OKAY -> {
@@ -45,7 +45,7 @@ class MainViewModel: ViewModel() {
     fun getSearchCustomizeWebtoonData(searchQuery:String ){
         viewModelScope.launch {
 
-            RetrofitManager.instance.getWeekWebtoonData(type = "searchCustomize",searchPlatform=null, searchTerm = searchQuery, completion = {
+            RetrofitManager.instance.getWeekWebtoonData(type = "searchCustomize",searchPlatform=null, searchTerm = searchQuery,searchWeek = null ,completion = {
                     responseState, responseDataArrayList ->
                 when (responseState) {
                     RESPONSE_STATUS.OKAY -> {
@@ -63,16 +63,16 @@ class MainViewModel: ViewModel() {
         }
     }
 
-    fun changeWeekQuery(week: String) :String{
+    fun changeWeekQuery(week: String) :Int{
         return when(week) {
-            "월" ->"mon"
-            "화" -> "tue"
-            "수" -> "wed"
-            "목" -> "thu"
-            "금" ->"fri"
-            "토" ->"sat"
-            "일" -> "sun"
-            else -> "sun"
+            "월" -> 0
+            "화" -> 1
+            "수" -> 2
+            "목" -> 3
+            "금" -> 4
+            "토" -> 5
+            "일" -> 6
+            else -> 0
         }
     }
 }
