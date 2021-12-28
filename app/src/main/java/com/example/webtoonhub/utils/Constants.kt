@@ -12,11 +12,11 @@ object API{
     const val BASE_URL:String="https://korea-webtoon-api.herokuapp.com"
     const val GET_ALL:String="all"
     const val SEARCH:String="/{platform}/week"
-    const val SEARCH_CUSTOMIZE:String="/"
+    const val SEARCH_CUSTOMIZE:String="/search"
 
     //모두 검색 https://korea-webtoon-api.herokuapp.com/all
-    //검색시 https://korea-webtoon-api.herokuapp.com/?search="검색어"
-    //요일별 검색 https://korea-webtoon-api.herokuapp.com/all/week?day=fri
+    //검색시 https://korea-webtoon-api.herokuapp.com/search?keyword="검색어"
+    //요일별 검색 https://korea-webtoon-api.herokuapp.com/naver/week?day=2
 }
 enum class PLATFORM(val string: String) {
     KAKAOPAGE("kakao-page"),
