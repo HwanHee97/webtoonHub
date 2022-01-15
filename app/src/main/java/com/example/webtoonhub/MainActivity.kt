@@ -184,6 +184,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 setBackgroundColor(getColor(R.color.search_app_bar_background))
             }
             tabsLayout.visibility = View.GONE
+            viewPager.isUserInputEnabled=false
         }
         return true
     }
@@ -199,7 +200,10 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        binding.tabsLayout.visibility=View.VISIBLE
+        binding.apply {
+            tabsLayout.visibility = View.VISIBLE
+            viewPager.isUserInputEnabled = true
+        }
         when (item?.itemId) {
             R.id.menu_naver -> {
                 Toast.makeText(this, "네이버 선택", Toast.LENGTH_SHORT).show()
