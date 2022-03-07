@@ -63,7 +63,7 @@ class MainViewModel: ViewModel() {
         }
     }
 
-    fun changeWeekQuery(week: String) :Int{
+    private fun changeWeekQuery(week: String) :Int{
         return when(week) {
             "월" -> 0
             "화" -> 1

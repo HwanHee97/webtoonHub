@@ -25,23 +25,23 @@ class WebViewActivity: AppCompatActivity() {
 
     }//onCreate()
 
-    fun setBinding(){
+    private fun setBinding(){
         //Log.d(Constants.TAG,"WebViewActivity - setBinding() called ")
         binding = ActivityWebViewBinding.inflate(layoutInflater)
     }
     //액션바 설정
-    fun setActionBar(){
+    private fun setActionBar(){
         setSupportActionBar(binding.webViewActivityToolbar)
         actionBar=supportActionBar!!
         actionBar.setDisplayHomeAsUpEnabled(true)
     }
     //url 받기
-    fun getIntents(){
+    private fun getIntents(){
         url=intent.getStringExtra("view_url") as String
         //Log.d(Constants.TAG,"WebViewActivity - getIntents() called / url: $url ")
     }
     //웹뷰에 url연결해서 띄우기
-    fun setWebView(){
+    private fun setWebView(){
         binding.webview.apply {
             webViewClient = WebViewClient()//하이퍼링크 클릭시 새창 띄우기 방지
             settings.javaScriptEnabled = true//자바스크립트 허용

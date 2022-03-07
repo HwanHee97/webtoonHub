@@ -23,10 +23,10 @@ class SplashActivity:AppCompatActivity() {
         startLoadingImage()
 
     }//onCreate()
-    fun setBinding(){
+    private fun setBinding(){
         binding= ActivitySplashBinding.inflate(layoutInflater)
     }
-    fun setLodingImageListener(){
+    private fun setLodingImageListener(){
         binding.loadingImage.addAnimatorListener(object :Animator.AnimatorListener{
             override fun onAnimationStart(animation: Animator?) {
                 //TODO("Not yet implemented")
@@ -53,7 +53,7 @@ class SplashActivity:AppCompatActivity() {
         })
     }
 
-    fun startLoadingImage(){
+    private fun startLoadingImage(){
         binding.loadingImage.apply {
             playAnimation()
             repeatCount=3//반복횟수 이것을 지정 안하면 무한반복이다. 나중에 애니매이션 무한반복 시키고 통신이 성공했을때 애니매이션 끝내고 액티비티 변환할것

@@ -40,14 +40,14 @@ class mainFragment() : Fragment() {
         return binding.root
     }
 
-    fun setRecyclerView() {
+    private fun setRecyclerView() {
         binding.myWebtoonRecyclerView.apply {
             layoutManager = GridLayoutManager(this.context, 3, GridLayoutManager.VERTICAL, false)
             adapter = webtoonRecyclerViewAdapter
         }
     }
 
-    fun setData(responseDataArrayList: ArrayList<WebToonData>?) {
+     fun setData(responseDataArrayList: ArrayList<WebToonData>?) {
         if (responseDataArrayList == null) {
             Log.e(Constants.TAG, "Null!!!!!!")
         }

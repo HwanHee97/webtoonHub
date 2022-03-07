@@ -57,7 +57,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
     }//onCreate
 
-    fun getTDayWeek(){
+    private fun getTDayWeek(){
         //시스템요일(일~토 1~7) 과 api요일을 판단하는 숫자가달라서 enum쿨래스로 선언하여 when을 통해 판별하여 api요일 숫자로 저장
         val instance = Calendar.getInstance()
         val week=instance.get(Calendar.DAY_OF_WEEK)
@@ -65,7 +65,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         Log.d(Constants.TAG,"MainActivity - getTDayWeek() called/dayWeek = ${dayWeek.dayWeek}//${dayWeek.dayNum}//${dayWeek.systemDayNum}")
     }
     //월~완결 순서를  오늘요일부터 시작하게 리스트 만들기.
-    fun makeWeekList( daynum:Int){
+    private fun makeWeekList( daynum:Int){
         var baseDayweeks : Array<out String> = resources.getStringArray(R.array.base_week_array)//arrays.xml에서 가져오기
         var i=daynum
         //요일 리스트 생성하는 알고리즘1
@@ -83,7 +83,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         }
     }
 
-    fun setObserve() {//
+    private fun setObserve() {//
         //Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
         mainViewModel.webtoonDataList.observe(this, androidx.lifecycle.Observer {
             //Log.d(Constants.TAG,"MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[1].title} //${pagerAdapter.getFragment(selectTab)}")
@@ -92,17 +92,17 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     }
 
     //바인딩
-    fun setBinding() {
+    private fun setBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
     // 액션바의 오버라이드 함수로 (네이버,카카오)플랫폼 선택하는 액션바 설정
-    fun setActionBar() {
+    private fun setActionBar() {
         setSupportActionBar(binding.topAppBar)
         supportActionBar?.setTitle("WebtoonHub")
     }
     //요일 선택하는 탭바의 클릭(포커스) 이벤트리스너//통신
-    fun setTabsListener(){
+    private fun setTabsListener(){
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             // 탭 버튼을 선택할 때 이벤트
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -123,7 +123,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         })
     }
     //프래그먼트 생성하고 그수만큼 탭바 생성
-    fun setTabsFragment() {
+    private fun setTabsFragment() {
         //요일만큼 프래그먼트 생성
         startToDayWeeks.forEach {
             fragments.add(mainFragment())
