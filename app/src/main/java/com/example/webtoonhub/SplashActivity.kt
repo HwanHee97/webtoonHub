@@ -56,7 +56,7 @@ class SplashActivity:AppCompatActivity() {
     fun startLoadingImage(){
         binding.loadingImage.apply {
             playAnimation()
-            repeatCount=3//반복횟수   이것을 지정 안하면 무한반복이다. 나중에 애니매이션 무한반복 시키고 통신이 성공했을때 애니매이션 끝내고 액티비티 변환할것
+            repeatCount=3//반복횟수 이것을 지정 안하면 무한반복이다. 나중에 애니매이션 무한반복 시키고 통신이 성공했을때 애니매이션 끝내고 액티비티 변환할것
         }
     }
 
