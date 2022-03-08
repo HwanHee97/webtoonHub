@@ -1,11 +1,14 @@
 package com.example.webtoonhub
 
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.webtoonhub.databinding.ActivityMainBinding
 import com.example.webtoonhub.model.WebToonData
 import com.example.webtoonhub.retrofit.RetrofitManager
 import com.example.webtoonhub.utils.Constants
@@ -18,6 +21,26 @@ class MainViewModel: ViewModel() {
     val webtoonDataList:LiveData<ArrayList<WebToonData>>
         get() =_webtoonDataList
 
+    private var _responseCode=MutableLiveData<Int>()
+    val responseCode:LiveData<Int>
+        get() =_responseCode
+
+    fun getResponseState(){
+        viewModelScope.launch {
+            RetrofitManager.instance.getResponseStateCode(completion = {
+                    responseState ->
+                when (responseState) {
+                    RESPONSE_STATUS.OKAY -> {
+                        Log.d(Constants.TAG, "MainViewModel - api 연결 성공: ")
+                        _responseCode.value=200
+                    }
+                    RESPONSE_STATUS.FAIL -> {
+                        Log.d(Constants.TAG, "MainViewModel - api 연결 실패: ")
+                    }
+                }
+            })
+        }
+    }
     // 요일을 매개변수로 받아 api 호출
     fun getWebtoonData(platform: String,week:String){
         viewModelScope.launch {
@@ -35,14 +58,14 @@ class MainViewModel: ViewModel() {
                     Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
                 }
                 RESPONSE_STATUS.NO_CONTENT -> {
-
                     Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
+                    Toast.makeText(App.instance,"검색 결과가 없습니다.",Toast.LENGTH_SHORT).show()
                 }
             }
             })
         }
     }
-    fun getSearchCustomizeWebtoonData(searchQuery:String ){
+    fun getSearchCustomizeWebtoonData(searchQuery:String){
         viewModelScope.launch {
 
             RetrofitManager.instance.getWeekWebtoonData(type = "searchCustomize",searchPlatform=null, searchTerm = searchQuery,searchWeek = null ,completion = {
@@ -51,12 +74,14 @@ class MainViewModel: ViewModel() {
                     RESPONSE_STATUS.OKAY -> {
                         Log.d(Constants.TAG, "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}")
                         _webtoonDataList.value=responseDataArrayList
+
                     }
                     RESPONSE_STATUS.FAIL -> {
                         Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
                     }
                     RESPONSE_STATUS.NO_CONTENT -> {
                         Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
+                        Toast.makeText(App.instance,"검색 결과가 없습니다.",Toast.LENGTH_SHORT).show()
                     }
                 }
             })

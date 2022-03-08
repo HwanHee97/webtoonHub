@@ -13,6 +13,7 @@ import com.google.gson.JsonElement
 import org.w3c.dom.Element
 import retrofit2.Call
 import retrofit2.Response
+import java.util.concurrent.TimeoutException
 
 class RetrofitManager {
     companion object {
@@ -22,7 +23,23 @@ class RetrofitManager {
     //레트로핏 인터페이스 만들기(가져오기): BASE_URL을 매매변수로 getClient 함수 호출한 결과
     private val iRetrofit: IRetrofit? = RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
     lateinit var call:Call<JsonElement>
-    var week: Int=0
+
+    fun getResponseStateCode(completion: (RESPONSE_STATUS) -> Unit){
+        call = iRetrofit?.getState().let { it } ?: return
+        call.enqueue(object : retrofit2.Callback<JsonElement> {
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+                when(response.code()){
+                    200->{
+                        completion(RESPONSE_STATUS.OKAY)
+                    }
+                }
+            }
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d(Constants.TAG, "RetorfitManager-getResponseStateCode-onFailure() called / t:$t")
+                completion(RESPONSE_STATUS.FAIL)
+            }
+        })
+    }
     fun getWeekWebtoonData(type:String,searchPlatform: String?,searchTerm: String?,searchWeek:Int?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
         Log.d(Constants.TAG, "RetorfitManager - getWebtoonData()")
         if (type=="search") {
@@ -76,7 +93,7 @@ class RetrofitManager {
                                 }
                                 completion(RESPONSE_STATUS.OKAY,parsedWeebtoonDataArrayList)
                             }catch (e:IllegalStateException){
-                                Toast.makeText(App.instance,"검색 결과가 없습니다.",Toast.LENGTH_SHORT).show()
+                                completion(RESPONSE_STATUS.NO_CONTENT,parsedWeebtoonDataArrayList)
                             }
                         }
                     }
