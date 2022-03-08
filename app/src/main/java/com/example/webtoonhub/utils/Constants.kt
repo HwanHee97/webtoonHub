@@ -21,7 +21,8 @@ object API{
 enum class PLATFORM(val string: String) {
     KAKAOPAGE("kakao-page"),
     NAVER("naver"),
-    KAKAO("kakao")
+    KAKAO("kakao"),
+    CUSTOM_SEARCH("custom-search")
 
 }
 enum class API_DAY_WEEK(val dayWeek:String, val dayNum:Int,val systemDayNum:Int){

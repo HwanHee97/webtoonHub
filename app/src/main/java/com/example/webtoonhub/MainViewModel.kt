@@ -12,6 +12,7 @@ import com.example.webtoonhub.databinding.ActivityMainBinding
 import com.example.webtoonhub.model.WebToonData
 import com.example.webtoonhub.retrofit.RetrofitManager
 import com.example.webtoonhub.utils.Constants
+import com.example.webtoonhub.utils.PLATFORM
 import com.example.webtoonhub.utils.RESPONSE_STATUS
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,10 @@ class MainViewModel: ViewModel() {
     private var _webtoonDataList=MutableLiveData<ArrayList<WebToonData>>()
     val webtoonDataList:LiveData<ArrayList<WebToonData>>
         get() =_webtoonDataList
+
+    private var _platform=MutableLiveData<PLATFORM>()
+    val platform:LiveData<PLATFORM>
+        get() =_platform
 
     private var _responseCode=MutableLiveData<Int>()
     val responseCode:LiveData<Int>
@@ -42,30 +47,34 @@ class MainViewModel: ViewModel() {
         }
     }
     // 요일을 매개변수로 받아 api 호출
-    fun getWebtoonData(platform: String,week:String){
+    fun getWebtoonData(platform: PLATFORM,week:String){
         viewModelScope.launch {
             var queryWeek=changeWeekQuery(week)
 
             RetrofitManager.instance.getWeekWebtoonData(type = "search",searchPlatform=platform, searchTerm = null,searchWeek = queryWeek, completion = {
                 responseState, responseDataArrayList ->
-            when (responseState) {
-                RESPONSE_STATUS.OKAY -> {
-                    Log.d(Constants.TAG, "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}")
-                    _webtoonDataList.value=responseDataArrayList
+                when (responseState) {
+                    RESPONSE_STATUS.OKAY -> {
+                        Log.d(
+                            Constants.TAG,
+                            "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}"
+                        )
+                        _webtoonDataList.value = responseDataArrayList
+                        _platform.value = platform
+                    }
+                    RESPONSE_STATUS.FAIL -> {
+                        Toast.makeText(App.instance, "데이터 로드 실패", Toast.LENGTH_SHORT).show()
+                        Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
+                    }
+                    RESPONSE_STATUS.NO_CONTENT -> {
+                        Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
+                        Toast.makeText(App.instance, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                RESPONSE_STATUS.FAIL -> {
-                    Toast.makeText(App.instance,"데이터 로드 실패",Toast.LENGTH_SHORT).show()
-                    Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
-                }
-                RESPONSE_STATUS.NO_CONTENT -> {
-                    Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
-                    Toast.makeText(App.instance,"검색 결과가 없습니다.",Toast.LENGTH_SHORT).show()
-                }
-            }
             })
         }
     }
-    fun getSearchCustomizeWebtoonData(searchQuery:String , binding:ActivityMainBinding ){
+    fun getSearchCustomizeWebtoonData(searchQuery:String){
         viewModelScope.launch {
 
             RetrofitManager.instance.getWeekWebtoonData(type = "searchCustomize",searchPlatform=null, searchTerm = searchQuery,searchWeek = null ,completion = {
@@ -74,16 +83,7 @@ class MainViewModel: ViewModel() {
                     RESPONSE_STATUS.OKAY -> {
                         Log.d(Constants.TAG, "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}")
                         _webtoonDataList.value=responseDataArrayList
-
-                        binding.apply {
-                            mainActivityLayout.setBackgroundColor(getColor(App.instance,R.color.search_background))
-                            topAppBar.apply {
-                                collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
-                                setBackgroundColor(getColor(App.instance,R.color.search_app_bar_background))
-                            }
-                            tabsLayout.visibility = View.GONE
-                            viewPager.isUserInputEnabled=false
-                        }
+                        _platform.value=PLATFORM.CUSTOM_SEARCH
                     }
                     RESPONSE_STATUS.FAIL -> {
                         Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")

@@ -40,11 +40,11 @@ class RetrofitManager {
             }
         })
     }
-    fun getWeekWebtoonData(type:String,searchPlatform: String?,searchTerm: String?,searchWeek:Int?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
+    fun getWeekWebtoonData(type:String,searchPlatform: PLATFORM?,searchTerm: String?,searchWeek:Int?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
         Log.d(Constants.TAG, "RetorfitManager - getWebtoonData()")
         if (type=="search") {
             val week = searchWeek.let { it } ?: 0//searchTerm이 비어있으면""을 반환 아니면 그대로(it) //enum쿨래스의 mon~sun 값이다.
-            val platform = searchPlatform.let { it } ?: ""
+            val platform = searchPlatform?.string.let { it } ?: ""
              call = iRetrofit?.search(platform = platform, searchTerm = week).let { it } ?: return //값이 없으면 return한다.있으면 it return
         }else if(type=="searchCustomize"){
             val searchQuery = searchTerm.let { it } ?: ""
@@ -101,7 +101,7 @@ class RetrofitManager {
             }
             //응답 실패시
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
-                Log.d(Constants.TAG, "RetorfitManager-onFailure() called / t:$t")
+                Log.d(Constants.TAG, "RetorfitManager-onFailure() called / t:$t t.message:${t.message} t.cause:${t.cause}")
             }
         })
     }

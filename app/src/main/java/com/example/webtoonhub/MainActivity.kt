@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.webtoonhub.databinding.ActivityMainBinding
 import com.example.webtoonhub.fragment.WeekFragmentStateAdapter
 import com.example.webtoonhub.utils.Constants
@@ -81,6 +82,40 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             //Log.d(Constants.TAG,"MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[1].title} //${pagerAdapter.getFragment(selectTab)}")
             pagerAdapter.getFragment(selectTab).setData(it)
         })
+        mainViewModel.platform.observe(this, androidx.lifecycle.Observer {
+            when (it) {
+                PLATFORM.CUSTOM_SEARCH -> {
+                    binding.apply {
+                        mainActivityLayout.setBackgroundColor(getColor(R.color.search_background))
+                        topAppBar.apply {
+                            collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
+                            setBackgroundColor(getColor(R.color.search_app_bar_background))
+                        }
+                        tabsLayout.visibility = View.GONE
+                        viewPager.isUserInputEnabled = false
+                    }
+                }
+                PLATFORM.NAVER -> {
+                    binding.apply {
+                        mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
+                        topAppBar.setBackgroundColor(getColor(R.color.naver_background))
+                    }
+                }
+                PLATFORM.KAKAO ->{
+                    binding.apply {
+                        mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
+                        topAppBar.setBackgroundColor(getColor(R.color.kakao_background))
+                    }
+                }
+                PLATFORM.KAKAOPAGE ->{
+                    binding.apply {
+                        mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
+                        topAppBar.setBackgroundColor(getColor(R.color.kakao_page_background))
+                    }
+                }
+            }
+        })
+
     }
 
     //바인딩
@@ -104,7 +139,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 if (tab != null) {
                     selectTab=tab.position
                     Log.d(Constants.TAG, "----------$day 선택, / tab 포지션 = ${tab.position} -----------")
-                    mainViewModel.getWebtoonData(platform = platform.string,day) //선택된 요일의 웹툰 데이터 검색하기
+                    mainViewModel.getWebtoonData(platform = platform,day) //선택된 요일의 웹툰 데이터 검색하기
                 }
             }
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
@@ -167,8 +202,9 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         //Log.d(Constants.TAG, "MainActivity - onQueryTextSubmit() called / query: ${query}")
         if (!query.isNullOrEmpty()) {
             //api호출!!!!!
-            mainViewModel.getSearchCustomizeWebtoonData(query, binding)//binding을 넘기는 이유는 검색성공시에만 view를 변경하기 위해 성공시 viewmodel에서 view변경한다.
+            mainViewModel.getSearchCustomizeWebtoonData(query)
         }
+
         return true
     }
     //텍스트 입력시
@@ -191,32 +227,20 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             R.id.menu_naver -> {
                 Toast.makeText(this, "네이버 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 네이버 선택 ")
-                binding.apply {
-                    mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
-                    topAppBar.setBackgroundColor(getColor(R.color.naver_background))
-                }
                 platform = PLATFORM.NAVER
-                mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
+                mainViewModel.getWebtoonData(platform = platform,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao -> {
                 Toast.makeText(this, "카카오 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 선택 ")
-               binding.apply {
-                   mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
-                   topAppBar.setBackgroundColor(getColor(R.color.kakao_background))
-               }
                 platform = PLATFORM.KAKAO
-                mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
+                mainViewModel.getWebtoonData(platform = platform,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao_page -> {
                 Toast.makeText(this, "카카오 페이지 선택", Toast.LENGTH_SHORT).show()
                 Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 페이지 선택 ")
-                binding.apply {
-                    mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
-                    topAppBar.setBackgroundColor(getColor(R.color.kakao_page_background))
-                }
                 platform = PLATFORM.KAKAOPAGE
-                mainViewModel.getWebtoonData(platform = platform.string,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
+                mainViewModel.getWebtoonData(platform = platform,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
         }
         return super.onOptionsItemSelected(item)
