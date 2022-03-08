@@ -68,15 +68,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     private fun makeWeekList( daynum:Int){
         var baseDayweeks : Array<out String> = resources.getStringArray(R.array.base_week_array)//arrays.xml에서 가져오기
         var i=daynum
-        //요일 리스트 생성하는 알고리즘1
-//        do {
-//            startToDayWeeks.add(baseDayweeks[i])
-//            i++
-//            if (i==7){
-//                i=0
-//            }
-//        }while (startToDayWeeks.size<7)
-        //요일 리스트 생성하는 알고리즘2
+        //요일 리스트 생성하는 알고리즘
         for (e in baseDayweeks){
             startToDayWeeks.add(baseDayweeks[i%baseDayweeks.size])
             i++
@@ -172,19 +164,10 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     }
     //검색 눌렸을때
     override fun onQueryTextSubmit(query: String?): Boolean {
-        Log.d(Constants.TAG, "MainActivity - onQueryTextSubmit() called / query: ${query}")
+        //Log.d(Constants.TAG, "MainActivity - onQueryTextSubmit() called / query: ${query}")
         if (!query.isNullOrEmpty()) {
             //api호출!!!!!
-            mainViewModel.getSearchCustomizeWebtoonData(query)
-        }
-        binding.apply {
-            mainActivityLayout.setBackgroundColor(getColor(R.color.search_background))
-            topAppBar.apply {
-                collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
-                setBackgroundColor(getColor(R.color.search_app_bar_background))
-            }
-            tabsLayout.visibility = View.GONE
-            viewPager.isUserInputEnabled=false
+            mainViewModel.getSearchCustomizeWebtoonData(query, binding)//binding을 넘기는 이유는 검색성공시에만 view를 변경하기 위해 성공시 viewmodel에서 view변경한다.
         }
         return true
     }

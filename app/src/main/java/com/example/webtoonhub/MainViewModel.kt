@@ -65,7 +65,7 @@ class MainViewModel: ViewModel() {
             })
         }
     }
-    fun getSearchCustomizeWebtoonData(searchQuery:String){
+    fun getSearchCustomizeWebtoonData(searchQuery:String , binding:ActivityMainBinding ){
         viewModelScope.launch {
 
             RetrofitManager.instance.getWeekWebtoonData(type = "searchCustomize",searchPlatform=null, searchTerm = searchQuery,searchWeek = null ,completion = {
@@ -75,6 +75,15 @@ class MainViewModel: ViewModel() {
                         Log.d(Constants.TAG, "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}")
                         _webtoonDataList.value=responseDataArrayList
 
+                        binding.apply {
+                            mainActivityLayout.setBackgroundColor(getColor(App.instance,R.color.search_background))
+                            topAppBar.apply {
+                                collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
+                                setBackgroundColor(getColor(App.instance,R.color.search_app_bar_background))
+                            }
+                            tabsLayout.visibility = View.GONE
+                            viewPager.isUserInputEnabled=false
+                        }
                     }
                     RESPONSE_STATUS.FAIL -> {
                         Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
