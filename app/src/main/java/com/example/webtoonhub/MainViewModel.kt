@@ -30,7 +30,7 @@ class MainViewModel: ViewModel() {
         get() =_responseCode
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()//StateFlow설명 : https://yoon-dailylife.tistory.com/72
 
     fun getResponseState(){
         viewModelScope.launch {
