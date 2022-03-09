@@ -4,10 +4,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getColor
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.webtoonhub.databinding.ActivityMainBinding
 import com.example.webtoonhub.model.WebToonData
 import com.example.webtoonhub.retrofit.RetrofitManager

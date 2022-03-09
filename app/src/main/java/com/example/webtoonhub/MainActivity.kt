@@ -36,12 +36,10 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     private  var platform:PLATFORM=PLATFORM.NAVER//네이버가 기본설정
     private lateinit var mySearchView: androidx.appcompat.widget.SearchView
     private lateinit var mySearchViewEditText: EditText
-    var fragments : ArrayList<mainFragment> = ArrayList()
-
-    var dayWeek: API_DAY_WEEK = API_DAY_WEEK.MONDAY//기본요일을 월요일로 설정
-    var startToDayWeeks:ArrayList<String> = ArrayList()//인텐트로 받아올 오늘요일부터 시작하는 요일 리스트
-
-    var selectTab:Int = 0
+    private var fragments : ArrayList<mainFragment> = ArrayList()
+    private var dayWeek: API_DAY_WEEK = API_DAY_WEEK.MONDAY//기본요일을 월요일로 설정
+    private var startToDayWeeks:ArrayList<String> = ArrayList()//인텐트로 받아올 오늘요일부터 시작하는 요일 리스트
+    private var selectTab:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,49 +73,6 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             i++
         }
     }
-
-    private fun setObserve() {//
-        //Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
-        mainViewModel.webtoonDataList.observe(this, androidx.lifecycle.Observer {
-            //Log.d(Constants.TAG,"MainActivity - setObserve() called  뷰모델의 웹툰데이터 변경됨 : 첫번째 웹툰 제목 = ${it[1].title} //${pagerAdapter.getFragment(selectTab)}")
-            pagerAdapter.getFragment(selectTab).setData(it)
-        })
-        mainViewModel.platform.observe(this, androidx.lifecycle.Observer {
-            when (it) {
-                PLATFORM.CUSTOM_SEARCH -> {
-                    binding.apply {
-                        mainActivityLayout.setBackgroundColor(getColor(R.color.search_background))
-                        topAppBar.apply {
-                            collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
-                            setBackgroundColor(getColor(R.color.search_app_bar_background))
-                        }
-                        tabsLayout.visibility = View.GONE
-                        viewPager.isUserInputEnabled = false
-                    }
-                }
-                PLATFORM.NAVER -> {
-                    binding.apply {
-                        mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
-                        topAppBar.setBackgroundColor(getColor(R.color.naver_background))
-                    }
-                }
-                PLATFORM.KAKAO ->{
-                    binding.apply {
-                        mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
-                        topAppBar.setBackgroundColor(getColor(R.color.kakao_background))
-                    }
-                }
-                PLATFORM.KAKAOPAGE ->{
-                    binding.apply {
-                        mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
-                        topAppBar.setBackgroundColor(getColor(R.color.kakao_page_background))
-                    }
-                }
-            }
-        })
-
-    }
-
     //바인딩
     private fun setBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -144,7 +99,6 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             }
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
             override fun onTabReselected(tab: TabLayout.Tab?) {  }
-
             // 다른 탭 버튼을 눌러 선택된 탭 버튼이 해제될 때 이벤트
             override fun onTabUnselected(tab: TabLayout.Tab?) {  }
         })
@@ -163,7 +117,6 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             //tabs.add(tab)
         }.attach()
     }
-
     //액션바 사용을 위한 오버라이드 함수
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -204,7 +157,6 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             //api호출!!!!!
             mainViewModel.getSearchCustomizeWebtoonData(query)
         }
-
         return true
     }
     //텍스트 입력시
@@ -225,25 +177,67 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         }
         when (item?.itemId) {
             R.id.menu_naver -> {
-                Toast.makeText(this, "네이버 선택", Toast.LENGTH_SHORT).show()
-                Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 네이버 선택 ")
-                platform = PLATFORM.NAVER
+                changePlatform(PLATFORM.NAVER)
                 mainViewModel.getWebtoonData(platform = platform,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao -> {
-                Toast.makeText(this, "카카오 선택", Toast.LENGTH_SHORT).show()
-                Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 선택 ")
-                platform = PLATFORM.KAKAO
+                changePlatform(PLATFORM.KAKAO)
                 mainViewModel.getWebtoonData(platform = platform,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao_page -> {
-                Toast.makeText(this, "카카오 페이지 선택", Toast.LENGTH_SHORT).show()
-                Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected() called/ 카카오 페이지 선택 ")
-                platform = PLATFORM.KAKAOPAGE
+                changePlatform(PLATFORM.KAKAOPAGE)
                 mainViewModel.getWebtoonData(platform = platform,startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun changePlatform(platform: PLATFORM){
+        Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected()-changePlatform() called/ ${platform.string} 선택 ")
+        Toast.makeText(this, "${platform.string} 선택", Toast.LENGTH_SHORT).show()
+        this.platform=platform
+    }
+
+    private fun setObserve() {//
+        //Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
+        mainViewModel.apply {
+            webtoonDataList.observe(this@MainActivity, androidx.lifecycle.Observer {
+                pagerAdapter.getFragment(selectTab).setData(it)
+            })
+            platform.observe(this@MainActivity, androidx.lifecycle.Observer {
+                when (it) {
+                    PLATFORM.CUSTOM_SEARCH -> {
+                        binding.apply {
+                            mainActivityLayout.setBackgroundColor(getColor(R.color.search_background))
+                            topAppBar.apply {
+                                collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
+                                setBackgroundColor(getColor(R.color.search_app_bar_background))
+                            }
+                            tabsLayout.visibility = View.GONE
+                            viewPager.isUserInputEnabled = false
+                        }
+                    }
+                    PLATFORM.NAVER -> {
+                        binding.apply {
+                            mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
+                            topAppBar.setBackgroundColor(getColor(R.color.naver_background))
+                        }
+                    }
+                    PLATFORM.KAKAO ->{
+                        binding.apply {
+                            mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
+                            topAppBar.setBackgroundColor(getColor(R.color.kakao_background))
+                        }
+                    }
+                    PLATFORM.KAKAOPAGE ->{
+                        binding.apply {
+                            mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
+                            topAppBar.setBackgroundColor(getColor(R.color.kakao_page_background))
+                        }
+                    }
+                }
+            })
+        }
     }
 
 }
