@@ -205,38 +205,41 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 pagerAdapter.getFragment(selectTab).setData(it)
             })
             platform.observe(this@MainActivity, androidx.lifecycle.Observer {
-                when (it) {
-                    PLATFORM.CUSTOM_SEARCH -> {
-                        binding.apply {
-                            mainActivityLayout.setBackgroundColor(getColor(R.color.search_background))
-                            topAppBar.apply {
-                                collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
-                                setBackgroundColor(getColor(R.color.search_app_bar_background))
-                            }
-                            tabsLayout.visibility = View.GONE
-                            viewPager.isUserInputEnabled = false
-                        }
-                    }
-                    PLATFORM.NAVER -> {
-                        binding.apply {
-                            mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
-                            topAppBar.setBackgroundColor(getColor(R.color.naver_background))
-                        }
-                    }
-                    PLATFORM.KAKAO ->{
-                        binding.apply {
-                            mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
-                            topAppBar.setBackgroundColor(getColor(R.color.kakao_background))
-                        }
-                    }
-                    PLATFORM.KAKAOPAGE ->{
-                        binding.apply {
-                            mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
-                            topAppBar.setBackgroundColor(getColor(R.color.kakao_page_background))
-                        }
-                    }
-                }
+                setBackgroundColorByPlatform(it)
             })
+        }
+    }
+    private fun setBackgroundColorByPlatform(platform: PLATFORM){
+        when (platform) {
+            PLATFORM.CUSTOM_SEARCH -> {
+                binding.apply {
+                    mainActivityLayout.setBackgroundColor(getColor(R.color.search_background))
+                    topAppBar.apply {
+                        collapseActionView()//탑바에 액션뷰가 닫힘//키보드 사라짐
+                        setBackgroundColor(getColor(R.color.search_app_bar_background))
+                    }
+                    tabsLayout.visibility = View.GONE
+                    viewPager.isUserInputEnabled = false
+                }
+            }
+            PLATFORM.NAVER -> {
+                binding.apply {
+                    mainActivityLayout.setBackgroundColor(getColor(R.color.naver_background))
+                    topAppBar.setBackgroundColor(getColor(R.color.naver_background))
+                }
+            }
+            PLATFORM.KAKAO ->{
+                binding.apply {
+                    mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_background))
+                    topAppBar.setBackgroundColor(getColor(R.color.kakao_background))
+                }
+            }
+            PLATFORM.KAKAOPAGE ->{
+                binding.apply {
+                    mainActivityLayout.setBackgroundColor(getColor(R.color.kakao_page_background))
+                    topAppBar.setBackgroundColor(getColor(R.color.kakao_page_background))
+                }
+            }
         }
     }
 
