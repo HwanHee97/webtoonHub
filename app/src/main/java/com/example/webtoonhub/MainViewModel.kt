@@ -11,6 +11,8 @@ import com.example.webtoonhub.retrofit.RetrofitManager
 import com.example.webtoonhub.utils.Constants
 import com.example.webtoonhub.utils.PLATFORM
 import com.example.webtoonhub.utils.RESPONSE_STATUS
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
@@ -27,6 +29,9 @@ class MainViewModel: ViewModel() {
     val responseCode:LiveData<Int>
         get() =_responseCode
 
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
+    val uiState = _uiState.asStateFlow()
+
     fun getResponseState(){
         viewModelScope.launch {
             RetrofitManager.instance.getResponseStateCode(completion = {
@@ -34,10 +39,11 @@ class MainViewModel: ViewModel() {
                 when (responseState) {
                     RESPONSE_STATUS.OKAY -> {
                         Log.d(Constants.TAG, "MainViewModel - api 연결 성공: ")
-                        _responseCode.value=200
+                        _uiState.value=UiState.Success
                     }
                     RESPONSE_STATUS.FAIL -> {
                         Log.d(Constants.TAG, "MainViewModel - api 연결 실패: ")
+                        _uiState.value=UiState.Error
                     }
                 }
             })

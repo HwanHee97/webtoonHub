@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import com.example.webtoonhub.databinding.ActivitySplashBinding
 import com.example.webtoonhub.utils.API_DAY_WEEK
 import com.example.webtoonhub.utils.Constants
@@ -22,17 +23,15 @@ class SplashActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setBinding()
         setContentView(binding.root)
-        mainViewModel.getResponseState()
-        setLodingImageListener()
-        startLoadingImage()
         setObserve()
-
     }//onCreate()
+
     private fun setBinding(){
+        Log.d(Constants.TAG,"SplashActivity - setBinding() called")
         binding= ActivitySplashBinding.inflate(layoutInflater)
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
     }
+
     private fun setLodingImageListener(){
         binding.loadingImage.addAnimatorListener(object :Animator.AnimatorListener{
             override fun onAnimationStart(animation: Animator?) {
@@ -64,13 +63,28 @@ class SplashActivity:AppCompatActivity() {
         }
     }
     private fun setObserve() {//api통신가능 일때 메인 액티비티 실행한다.
-        mainViewModel.responseCode.observe(this, androidx.lifecycle.Observer {
-            Log.d(Constants.TAG,"SplashActivity - setObserve() called ")
-            when(it){
-                200-> {
+        mainViewModel.uiState.asLiveData().observe(this, androidx.lifecycle.Observer
+        {
+            when (it) {
+                is UiState.Loading -> {
+                    Log.d(Constants.TAG,"UiState.Loading")
+                    mainViewModel.getResponseState()
+                    setLodingImageListener()
+                    startLoadingImage()
+                }
+                is UiState.Empty -> {
+                    Log.d(Constants.TAG,"UiState.Empty")
+                    mainViewModel.getResponseState()
+                }
+                is UiState.Success -> {
+                    Log.d(Constants.TAG,"UiState.Success")
                     val intent = Intent(this@SplashActivity, MainActivity::class.java)
                     startActivity(intent)//메인 액티비티 시작
                     finish()
+                }
+                is UiState.Error -> {
+                    Log.d(Constants.TAG,"UiState.Error")
+                    mainViewModel.getResponseState()
                 }
             }
         })
