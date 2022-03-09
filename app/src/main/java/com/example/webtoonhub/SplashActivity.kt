@@ -63,6 +63,9 @@ class SplashActivity:AppCompatActivity() {
         }
     }
     private fun setObserve() {//api통신가능 일때 메인 액티비티 실행한다.
+        //StateFlow는 LiveData와 달리 생명주기를 자동으로 핸들링하지 못하기에 뷰에서
+        // 1. lifecycleScope를 선언해 처리해 주거나
+        //2. lifecycleScope의 사용이 번거롭다면 asLiveData()를 사용할 수 있다.
         mainViewModel.uiState.asLiveData().observe(this, androidx.lifecycle.Observer
         {
             when (it) {
