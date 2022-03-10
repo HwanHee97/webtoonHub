@@ -23,7 +23,7 @@ class SplashActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setBinding()
         setContentView(binding.root)
-        setObserve()
+        setObserve()//ui상태 옵저빙
     }//onCreate()
 
     private fun setBinding(){
@@ -47,6 +47,7 @@ class SplashActivity:AppCompatActivity() {
             override fun onAnimationCancel(animation: Animator?) {
                 // TODO("Not yet implemented")
                 Log.d(Constants.TAG,"애니매이션 취소")
+                onAnimationEnd(animation)
             }
 
             override fun onAnimationRepeat(animation: Animator?) {
@@ -56,12 +57,6 @@ class SplashActivity:AppCompatActivity() {
         })
     }
 
-    private fun startLoadingImage(){
-        binding.loadingImage.apply {
-            playAnimation()
-            //repeatCount=3//반복횟수 이것을 지정 안하면 무한반복이다. 나중에 애니매이션 무한반복 시키고 통신이 성공했을때 애니매이션 끝내고 액티비티 변환할것
-        }
-    }
     private fun setObserve() {//api통신가능 일때 메인 액티비티 실행한다.
         //StateFlow는 LiveData와 달리 생명주기를 자동으로 핸들링하지 못하기에 뷰에서
         // 1. lifecycleScope를 선언해 처리해 주거나
@@ -81,9 +76,8 @@ class SplashActivity:AppCompatActivity() {
                 }
                 is UiState.Success -> {
                     Log.d(Constants.TAG,"UiState.Success")
-                    val intent = Intent(this@SplashActivity, MainActivity::class.java)
-                    startActivity(intent)//메인 액티비티 시작
-                    finish()
+                    stopLoadingImage()
+                    startMainActivity()
                 }
                 is UiState.Error -> {
                     Log.d(Constants.TAG,"UiState.Error")
@@ -92,4 +86,12 @@ class SplashActivity:AppCompatActivity() {
             }
         })
     }
+    private fun startLoadingImage() = binding.loadingImage.playAnimation()//애니매이션 시작
+    private fun stopLoadingImage() = binding.loadingImage.cancelAnimation()//애니매이션 취소
+    private fun startMainActivity(){//메인 액티비티 실행
+        val intent = Intent(this@SplashActivity, MainActivity::class.java)
+        startActivity(intent)//메인 액티비티 시작
+        finish()
+    }
+
 }
