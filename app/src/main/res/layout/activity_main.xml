@@ -42,11 +42,23 @@
                 android:layout_height="wrap_content">
             </com.google.android.material.tabs.TabLayout>
         </LinearLayout>
-
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/change_loading_image"
+            android:layout_width="match_parent"
+            android:layout_height="200sp"
+            android:layout_marginTop="50sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/change_loading_lottie"
+            android:visibility="invisible"/>
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

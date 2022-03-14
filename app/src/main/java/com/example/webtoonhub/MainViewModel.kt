@@ -53,21 +53,20 @@ class MainViewModel: ViewModel() {
     fun getWebtoonData(platform: PLATFORM,week:String){
         viewModelScope.launch {
             var queryWeek=changeWeekQuery(week)
-
+            _uiState.value=UiState.Empty
             RetrofitManager.instance.getWeekWebtoonData(type = "search",searchPlatform=platform, searchTerm = null,searchWeek = queryWeek, completion = {
                 responseState, responseDataArrayList ->
                 when (responseState) {
                     RESPONSE_STATUS.OKAY -> {
-                        Log.d(
-                            Constants.TAG,
-                            "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}"
-                        )
+                        Log.d(Constants.TAG, "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}")
                         _webtoonDataList.value = responseDataArrayList
+                        _uiState.value=UiState.Success
                         _platform.value = platform
                     }
                     RESPONSE_STATUS.FAIL -> {
                         Toast.makeText(App.instance, "데이터 로드 실패", Toast.LENGTH_SHORT).show()
                         Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
+                        _uiState.value=UiState.Error
                     }
                     RESPONSE_STATUS.NO_CONTENT -> {
                         Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
@@ -79,7 +78,7 @@ class MainViewModel: ViewModel() {
     }
     fun getSearchCustomizeWebtoonData(searchQuery:String){
         viewModelScope.launch {
-
+            _uiState.value=UiState.Empty
             RetrofitManager.instance.getWeekWebtoonData(type = "searchCustomize",searchPlatform=null, searchTerm = searchQuery,searchWeek = null ,completion = {
                     responseState, responseDataArrayList ->
                 when (responseState) {

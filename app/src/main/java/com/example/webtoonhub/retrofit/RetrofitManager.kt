@@ -102,6 +102,7 @@ class RetrofitManager {
             //응답 실패시
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 Log.d(Constants.TAG, "RetorfitManager-onFailure() called / t:$t t.message:${t.message} t.cause:${t.cause}")
+                completion(RESPONSE_STATUS.FAIL,null)
             }
         })
     }
