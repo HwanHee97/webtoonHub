@@ -1,5 +1,7 @@
 package com.example.webtoonhub.utils
 
+import java.util.*
+
 object Constants {
     const val TAG:String="로그"
 }
@@ -42,7 +44,12 @@ enum class API_DAY_WEEK(val dayWeek:String, val dayNum:Int,val systemDayNum:Int)
             FRIDAY.systemDayNum -> FRIDAY
             SATURDAY.systemDayNum -> SATURDAY
             SUNDAY.systemDayNum -> SUNDAY
-            else -> MONDAY
+            else -> MONDAY//기본요일을 월요일로 설정
         }
     }
+}
+fun getToDayWeek(): API_DAY_WEEK {
+    val instance = Calendar.getInstance()
+    val week=instance.get(Calendar.DAY_OF_WEEK)
+    return API_DAY_WEEK.MONDAY.setDay(week)
 }
