@@ -43,24 +43,12 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         setBinding()//바인딩
         setContentView(binding.root)
         setObserve()
-        Log.d(
-            Constants.TAG,
-            "MainActivity - getTDayWeek() called/dayWeek = ${dayWeek.dayWeek}//${dayWeek.dayNum}//${dayWeek.systemDayNum}"
-        )
-
+        Log.d(Constants.TAG, "MainActivity - getTDayWeek() called/dayWeek = ${dayWeek.dayWeek}//${dayWeek.dayNum}//${dayWeek.systemDayNum}")
     }//onCreate
 
-    //    private fun getTDayWeek(){
-//        //시스템요일(일~토 1~7) 과 api요일을 판단하는 숫자가달라서 enum쿨래스로 선언하여 when을 통해 판별하여 api요일 숫자로 저장
-//        val instance = Calendar.getInstance()
-//        val week=instance.get(Calendar.DAY_OF_WEEK)
-//        dayWeek= dayWeek.setDay(week)
-//        Log.d(Constants.TAG,"MainActivity - getTDayWeek() called/dayWeek = ${dayWeek.dayWeek}//${dayWeek.dayNum}//${dayWeek.systemDayNum}")
-//    }
     //월~완결 순서를  오늘요일부터 시작하게 리스트 만들기.
     private fun makeWeekList(daynum: Int) {
-        var baseDayweeks: Array<out String> =
-            resources.getStringArray(R.array.base_week_array)//arrays.xml에서 가져오기
+        var baseDayweeks: Array<out String> = resources.getStringArray(R.array.base_week_array)//arrays.xml에서 가져오기
         var i = daynum
         //요일 리스트 생성하는 알고리즘
         for (e in baseDayweeks) {
@@ -68,23 +56,17 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             i++
         }
     }
-
     //바인딩
     private fun setBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        Log.d(
-            Constants.TAG,
-            "${mainViewModel.uiState},${mainViewModel.uiState.value},${mainViewModel.uiState.toString()}"
-        )
+        Log.d(Constants.TAG, "${mainViewModel.uiState},${mainViewModel.uiState.value},${mainViewModel.uiState.toString()}")
     }
-
     // 액션바의 오버라이드 함수로 (네이버,카카오)플랫폼 선택하는 액션바 설정
     private fun setActionBar() {
         setSupportActionBar(binding.topAppBar)
         supportActionBar?.setTitle("WebtoonHub")
     }
-
     //요일 선택하는 탭바의 클릭(포커스) 이벤트리스너//통신
     private fun setTabsListener() {
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -95,22 +77,16 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 //선택된 요일 데이터 호출
                 if (tab != null) {
                     selectTab = tab.position
-                    Log.d(
-                        Constants.TAG,
-                        "----------$day 선택, / tab 포지션 = ${tab.position} -----------"
-                    )
+                    Log.d(Constants.TAG, "----------$day 선택, / tab 포지션 = ${tab.position} -----------")
                     mainViewModel.getWebtoonData(platform = platform, day) //선택된 요일의 웹툰 데이터 검색하기
                 }
             }
-
             // 선택된 탭 버튼을 다시 선택할 때 이벤트
             override fun onTabReselected(tab: TabLayout.Tab?) {}
-
             // 다른 탭 버튼을 눌러 선택된 탭 버튼이 해제될 때 이벤트
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
     }
-
     //프래그먼트 생성하고 그수만큼 탭바 생성
     private fun setTabsFragment() {
         //요일만큼 프래그먼트 생성
@@ -122,10 +98,8 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         //탭바를 프래그먼트 수만클 생성
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = startToDayWeeks[position]
-            //tabs.add(tab)
         }.attach()
     }
-
     //액션바 사용을 위한 오버라이드 함수
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -157,20 +131,16 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             this.setTextColor(Color.WHITE)
             this.setHintTextColor(Color.WHITE)
         }
-        //Log.d(Constants.TAG, "MainActivity - onCreateOptionsMenu() calle ")
         return super.onCreateOptionsMenu(menu)
     }
-
     //검색 눌렸을때
     override fun onQueryTextSubmit(query: String?): Boolean {
-        //Log.d(Constants.TAG, "MainActivity - onQueryTextSubmit() called / query: ${query}")
         if (!query.isNullOrEmpty()) {
             //api호출!!!!!
             mainViewModel.getSearchCustomizeWebtoonData(query)
         }
         return true
     }
-
     //텍스트 입력시
     override fun onQueryTextChange(newText: String?): Boolean {
         Log.d(Constants.TAG, "MainActivity - onQueryTextSubmit() called / newText: ${newText}")
@@ -181,7 +151,6 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         }
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         binding.apply {
             tabsLayout.visibility = View.VISIBLE
@@ -205,18 +174,13 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     }
 
     private fun changePlatform(platform: PLATFORM) {
-        Log.d(
-            Constants.TAG,
-            "MainActivity - onOptionsItemSelected()-changePlatform() called/ ${platform.string} 선택 "
-        )
+        Log.d(Constants.TAG, "MainActivity - onOptionsItemSelected()-changePlatform() called/ ${platform.string} 선택 ")
         Toast.makeText(this, "${platform.string} 선택", Toast.LENGTH_SHORT).show()
         this.platform = platform
     }
 
     private fun setObserve() {//
-        //Log.d(Constants.TAG,"!!MainActivity - setObserve() called")
         mainViewModel.apply {
-
             platform.observe(this@MainActivity, androidx.lifecycle.Observer {
                 setBackgroundColorByPlatform(it)
             })
