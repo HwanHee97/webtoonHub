@@ -34,6 +34,7 @@ class MainViewModel: ViewModel() {
 
     fun getResponseState(){
         viewModelScope.launch {
+            _uiState.value=UiState.Empty
             RetrofitManager.instance.getResponseStateCode(completion = {
                     responseState ->
                 when (responseState) {
@@ -85,10 +86,12 @@ class MainViewModel: ViewModel() {
                     RESPONSE_STATUS.OKAY -> {
                         Log.d(Constants.TAG, "MainViewModel - api 호출 성공: ${responseDataArrayList?.size}")
                         _webtoonDataList.value=responseDataArrayList
+                        _uiState.value=UiState.Success
                         _platform.value=PLATFORM.CUSTOM_SEARCH
                     }
                     RESPONSE_STATUS.FAIL -> {
                         Log.d(Constants.TAG, "MainViewModel - api 호출 실패: $responseDataArrayList")
+                        _uiState.value=UiState.Error
                     }
                     RESPONSE_STATUS.NO_CONTENT -> {
                         Log.d(Constants.TAG, "MainViewModel - 검색 결과가 없습니다.")
