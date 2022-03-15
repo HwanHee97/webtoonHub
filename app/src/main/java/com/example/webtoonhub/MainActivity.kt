@@ -33,8 +33,8 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     private lateinit var mySearchView: androidx.appcompat.widget.SearchView
     private lateinit var mySearchViewEditText: EditText
     private var fragments: ArrayList<mainFragment> = ArrayList()
-    private var dayWeek: API_DAY_WEEK = getToDayWeek()//기본요일을 월요일로 설정
-    private var startToDayWeeks: ArrayList<String> = ArrayList()//인텐트로 받아올 오늘요일부터 시작하는 요일 리스트
+    private var dayWeek: API_DAY_WEEK = getTodayOfTheWeek()//기본요일을 월요일로 설정
+    private var weekArrayList: ArrayList<API_DAY_WEEK> = ArrayList()//인텐트로 받아올 오늘요일부터 시작하는 요일 리스트
     private var selectTab: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +52,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         var i = daynum
         //요일 리스트 생성하는 알고리즘
         for (e in baseDayweeks) {
-            startToDayWeeks.add(baseDayweeks[i % baseDayweeks.size])
+            weekArrayList.add(getApiDayWeek(baseDayweeks[i % baseDayweeks.size]))
             i++
         }
     }
@@ -73,7 +73,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
             // 탭 버튼을 선택할 때 이벤트
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 //선택퇸 요일 구하기
-                var day = startToDayWeeks.filter { tab?.text == it }[0]
+                var day = weekArrayList.filter { tab?.text == it.dayWeek }[0]
                 //선택된 요일 데이터 호출
                 if (tab != null) {
                     selectTab = tab.position
@@ -90,14 +90,14 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
     //프래그먼트 생성하고 그수만큼 탭바 생성
     private fun setTabsFragment() {
         //요일만큼 프래그먼트 생성
-        startToDayWeeks.forEach {
+        weekArrayList.forEach {
             fragments.add(mainFragment())
         }
         pagerAdapter = WeekFragmentStateAdapter(fragments, this)
         binding.viewPager.adapter = pagerAdapter
         //탭바를 프래그먼트 수만클 생성
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
-            tab.text = startToDayWeeks[position]
+            tab.text = weekArrayList[position].dayWeek
         }.attach()
     }
     //액션바 사용을 위한 오버라이드 함수
@@ -159,15 +159,15 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
         when (item?.itemId) {
             R.id.menu_naver -> {
                 changePlatform(PLATFORM.NAVER)
-                mainViewModel.getWebtoonData(platform = platform, startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
+                mainViewModel.getWebtoonData(platform = platform, weekArrayList[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao -> {
                 changePlatform(PLATFORM.KAKAO)
-                mainViewModel.getWebtoonData(platform = platform, startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
+                mainViewModel.getWebtoonData(platform = platform, weekArrayList[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
             R.id.menu_kakao_page -> {
                 changePlatform(PLATFORM.KAKAOPAGE)
-                mainViewModel.getWebtoonData(platform = platform, startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
+                mainViewModel.getWebtoonData(platform = platform, weekArrayList[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
             }
         }
         return super.onOptionsItemSelected(item)
@@ -190,7 +190,6 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
                     is UiState.Loading -> {
                         Log.d(Constants.TAG, "UiState.Loading")
                         //탭 생성할 요일 리스트 생성
-                        //getTDayWeek()//오늘요일구하기
                         makeWeekList(dayWeek.dayNum)//오늘요일을 시작으로 요일리스트 생성
                         setActionBar()// 액션바의 오버라이드 함수로 (네이버,카카오)플랫폼 선택하는 액션바 설정
                         setTabsListener()//요일 선택하는 탭바의 클릭 이벤트리스너//통신
@@ -208,7 +207,7 @@ androidx.appcompat.widget.SearchView.OnQueryTextListener {
                     }
                     is UiState.Error -> {
                         Log.d(Constants.TAG, "UiState.Error")
-                        getWebtoonData(platform = this@MainActivity.platform, startToDayWeeks[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
+                        getWebtoonData(platform = this@MainActivity.platform, weekArrayList[selectTab]) //선택된 요일의 웹툰 데이터 검색하기
                     }
                 }
             })

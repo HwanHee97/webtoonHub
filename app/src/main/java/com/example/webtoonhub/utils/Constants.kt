@@ -28,13 +28,13 @@ enum class PLATFORM(val string: String) {
 
 }
 enum class API_DAY_WEEK(val dayWeek:String, val dayNum:Int,val systemDayNum:Int){
-    MONDAY("mon",0,2),
-    TUESDAY("tue",1,3),
-    WEDNESDAY("wed",2,4),
-    THURSDAY("thu",3,5),
-    FRIDAY("fri",4,6),
-    SATURDAY("sat",5,7),
-    SUNDAY("sun",6,1);
+    MONDAY("월",0,2),
+    TUESDAY("화",1,3),
+    WEDNESDAY("수",2,4),
+    THURSDAY("목",3,5),
+    FRIDAY("금",4,6),
+    SATURDAY("토",5,7),
+    SUNDAY("일",6,1);
     fun setDay(num:Int):API_DAY_WEEK{
         return when (num) {
             MONDAY.systemDayNum -> MONDAY
@@ -48,8 +48,20 @@ enum class API_DAY_WEEK(val dayWeek:String, val dayNum:Int,val systemDayNum:Int)
         }
     }
 }
-fun getToDayWeek(): API_DAY_WEEK {
+fun getTodayOfTheWeek(): API_DAY_WEEK {
     val instance = Calendar.getInstance()
     val week=instance.get(Calendar.DAY_OF_WEEK)
     return API_DAY_WEEK.MONDAY.setDay(week)
+}
+fun getApiDayWeek(week: String):API_DAY_WEEK{
+    return when(week){
+        API_DAY_WEEK.MONDAY.dayWeek -> API_DAY_WEEK.MONDAY
+        API_DAY_WEEK.TUESDAY.dayWeek -> API_DAY_WEEK.TUESDAY
+        API_DAY_WEEK.WEDNESDAY.dayWeek -> API_DAY_WEEK.WEDNESDAY
+        API_DAY_WEEK.THURSDAY.dayWeek -> API_DAY_WEEK.THURSDAY
+        API_DAY_WEEK.FRIDAY.dayWeek -> API_DAY_WEEK.FRIDAY
+        API_DAY_WEEK.SATURDAY.dayWeek -> API_DAY_WEEK.SATURDAY
+        API_DAY_WEEK.SUNDAY.dayWeek -> API_DAY_WEEK.SUNDAY
+        else -> API_DAY_WEEK.MONDAY
+    }
 }

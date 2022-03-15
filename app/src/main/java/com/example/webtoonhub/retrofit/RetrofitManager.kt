@@ -4,10 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.webtoonhub.App
 import com.example.webtoonhub.model.WebToonData
-import com.example.webtoonhub.utils.API
-import com.example.webtoonhub.utils.Constants
-import com.example.webtoonhub.utils.PLATFORM
-import com.example.webtoonhub.utils.RESPONSE_STATUS
+import com.example.webtoonhub.utils.*
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import org.w3c.dom.Element
@@ -40,10 +37,10 @@ class RetrofitManager {
             }
         })
     }
-    fun getWeekWebtoonData(type:String,searchPlatform: PLATFORM?,searchTerm: String?,searchWeek:Int?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
+    fun getWeekWebtoonData(type:String,searchPlatform: PLATFORM?,searchTerm: String?,searchWeek:API_DAY_WEEK?, completion: (RESPONSE_STATUS, ArrayList<WebToonData>?) -> Unit) {
         Log.d(Constants.TAG, "RetorfitManager - getWebtoonData()")
         if (type=="search") {
-            val week = searchWeek.let { it } ?: 0//searchTerm이 비어있으면""을 반환 아니면 그대로(it) //enum쿨래스의 mon~sun 값이다.
+            val week = searchWeek?.let { it.dayNum } ?: 0//searchTerm이 비어있으면""을 반환 아니면 그대로(it) //enum쿨래스의 mon~sun 값이다.
             val platform = searchPlatform?.string.let { it } ?: ""
              call = iRetrofit?.search(platform = platform, searchTerm = week).let { it } ?: return //값이 없으면 return한다.있으면 it return
         }else if(type=="searchCustomize"){
@@ -82,7 +79,6 @@ class RetrofitManager {
                                             url = url,
                                             thumbnail = thumbnail,
                                             platform = platform,
-
                                             new = new,
                                             up =up
                                         )

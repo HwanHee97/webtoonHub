@@ -8,9 +8,7 @@ import androidx.lifecycle.*
 import com.example.webtoonhub.databinding.ActivityMainBinding
 import com.example.webtoonhub.model.WebToonData
 import com.example.webtoonhub.retrofit.RetrofitManager
-import com.example.webtoonhub.utils.Constants
-import com.example.webtoonhub.utils.PLATFORM
-import com.example.webtoonhub.utils.RESPONSE_STATUS
+import com.example.webtoonhub.utils.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -51,11 +49,10 @@ class MainViewModel: ViewModel() {
         }
     }
     // 요일을 매개변수로 받아 api 호출
-    fun getWebtoonData(platform: PLATFORM,week:String){
+    fun getWebtoonData(platform: PLATFORM,week:API_DAY_WEEK){
         viewModelScope.launch {
-            var queryWeek=changeWeekQuery(week)
             _uiState.value=UiState.Empty
-            RetrofitManager.instance.getWeekWebtoonData(type = "search",searchPlatform=platform, searchTerm = null,searchWeek = queryWeek, completion = {
+            RetrofitManager.instance.getWeekWebtoonData(type = "search",searchPlatform=platform, searchTerm = null,searchWeek = week, completion = {
                 responseState, responseDataArrayList ->
                 when (responseState) {
                     RESPONSE_STATUS.OKAY -> {
