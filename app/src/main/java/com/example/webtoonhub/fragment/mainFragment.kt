@@ -48,8 +48,10 @@ class mainFragment() : Fragment() {
         if (responseDataArrayList != null) {
             webtoonDataList = responseDataArrayList
         }
+        if (binding!=null){
         binding.myWebtoonRecyclerView.scrollToPosition(0)
         webtoonRecyclerViewAdapter.notifyDataChange(webtoonDataList)
+        }
     }
 
 }
